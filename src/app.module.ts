@@ -6,8 +6,10 @@ import { Lady } from 'entities/Lady';
 import { LadyAbout } from 'entities/LadyAbout';
 import { PhotosGentleman } from 'entities/PhotosGentleman';
 import { PhotosLady } from 'entities/PhotosLady';
-import { AppController } from './controllers/app.controller';
-import { AppService } from './services/app.service';
+import { GentlemanController } from './controllers/gentleman/gentleman.controller.ts';
+import { LadyContoller } from './controllers/lady/lady.controller';
+import { GentlemanService } from './services/gentleman/gentleman.service';
+import { LadyService } from './services/lady/lady.service';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { AppService } from './services/app.service';
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady])
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [GentlemanController, LadyContoller],
+  providers: [GentlemanService, LadyService],
 })
 export class AppModule {}

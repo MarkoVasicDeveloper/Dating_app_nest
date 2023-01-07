@@ -28,4 +28,15 @@ export class LadyService {
             return new ApiResponse('error', error, -2001);
         }
     }
+
+    async getByUsername(username: string): Promise<Lady | ApiResponse> {
+        const lady = await this.ladyService.findOne({
+            where: {
+                username
+            }
+        })
+
+        if(!lady) return new ApiResponse('error', 'Wrong username', -2002);
+        return lady;
+    }
 }

@@ -23,7 +23,7 @@ export class Gentleman {
   })
   username: string;
 
-  @Column("varchar", { name: "password", length: 50, default: () => "'0'" })
+  @Column("varchar", { name: "password", length: 255, default: () => "'0'" })
   password: string;
 
   @Column("varchar", {

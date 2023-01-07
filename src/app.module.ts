@@ -6,9 +6,12 @@ import { Lady } from 'entities/Lady';
 import { LadyAbout } from 'entities/LadyAbout';
 import { PhotosGentleman } from 'entities/PhotosGentleman';
 import { PhotosLady } from 'entities/PhotosLady';
+import { RefreshToken } from 'entities/RefreshToken';
+import { AuthController } from './controllers/auth/auth.controller';
 import { GentlemanController } from './controllers/gentleman/gentleman.controller.ts';
 import { LadyContoller } from './controllers/lady/lady.controller';
 import { GentlemanService } from './services/gentleman/gentleman.service';
+import { JwtService } from './services/jwt/jwt.service';
 import { LadyService } from './services/lady/lady.service';
 
 @Module({
@@ -20,11 +23,11 @@ import { LadyService } from './services/lady/lady.service';
       username: 'root',
       password: 'root',
       database: 'dating_app',
-      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady]
+      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken]
     }),
-    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady])
+    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken])
   ],
-  controllers: [GentlemanController, LadyContoller],
-  providers: [GentlemanService, LadyService],
+  controllers: [GentlemanController, LadyContoller, AuthController],
+  providers: [GentlemanService, LadyService, JwtService],
 })
 export class AppModule {}

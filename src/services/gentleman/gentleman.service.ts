@@ -31,4 +31,15 @@ export class GentlemanService {
       return new ApiResponse('error',error,  -1001)
     }
   }
+
+  async getByUsername(username: string): Promise<Gentleman | ApiResponse> {
+    const gentleman = await this.gentlemanService.findOne({
+      where: {
+        username
+      }
+    })
+
+    if(!gentleman) return new ApiResponse('error', 'Wrong username', -1002);
+    return gentleman;
+  }
 }

@@ -13,6 +13,8 @@ import { LadyContoller } from './controllers/lady/lady.controller';
 import { GentlemanService } from './services/gentleman/gentleman.service';
 import { JwtService } from './services/jwt/jwt.service';
 import { LadyService } from './services/lady/lady.service';
+import { MiddlewareConsumer, NestModule } from "@nestjs/common";
+import { AuthMiddleware } from './middleware/authMiddleware';
 
 @Module({
   imports: [
@@ -30,4 +32,8 @@ import { LadyService } from './services/lady/lady.service';
   controllers: [GentlemanController, LadyContoller, AuthController],
   providers: [GentlemanService, LadyService, JwtService],
 })
-export class AppModule {}
+export class AppModule implements NestModule{
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).exclude('auth/*', 'add/gentleman', 'add/lady').forRoutes('api/*')
+  }
+}

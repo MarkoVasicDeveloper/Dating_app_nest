@@ -1,1 +1,0 @@
-export const secret = 'dksfshkddvsd534s651vsd5v4sdfg4frdv1s354w5er3254wet13t46541etr3gs!OI#'

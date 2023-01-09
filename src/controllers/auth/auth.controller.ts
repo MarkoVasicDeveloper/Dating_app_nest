@@ -7,7 +7,7 @@ import { Req } from "@nestjs/common";
 import { ApiResponse } from "src/misc/api.response";
 import { JwtDataDto } from "src/dto/jwt/jwt.dto";
 import * as jwt from 'jsonwebtoken';
-import { secret } from "src/config/jwtSecret";
+import { secret } from "config/jwtSecret";
 import { LoginInfo } from "src/misc/loginInfo";
 import * as crypto from 'crypto';
 import { JwtRefreshDataDto } from "src/dto/jwt/jwt.refrest.dto";

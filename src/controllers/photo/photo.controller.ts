@@ -3,7 +3,7 @@ import { FileInterceptor } from "@nestjs/platform-express/multer";
 import { PhotosGentleman } from "entities/PhotosGentleman";
 import { PhotosLady } from "entities/PhotosLady";
 import { diskStorage } from 'multer';
-import { photoConfig } from "src/config/photo";
+import { photoConfig } from "config/photo";
 import { AddPhotoDto } from "src/dto/photo/add.photo.dto";
 import { ApiResponse } from "src/misc/api.response";
 import { PhotoService } from "src/services/photo/photo.service";

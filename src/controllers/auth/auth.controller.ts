@@ -12,6 +12,7 @@ import { LoginInfo } from "src/misc/loginInfo";
 import * as crypto from 'crypto';
 import { JwtRefreshDataDto } from "src/dto/jwt/jwt.refrest.dto";
 import { JwtService } from "src/services/jwt/jwt.service";
+import { RefreshToken } from "entities/RefreshToken";
 
 @Controller('auth')
 export class AuthController {
@@ -32,15 +33,34 @@ export class AuthController {
         const passwordHashString = passwordHash.digest('hex').toString().toUpperCase();
 
         if(user.password !== passwordHashString) return new ApiResponse('error', 'Wrong username or password', 3001);
-
+        
         const jwtData = new JwtDataDto();
         jwtData.id = data.lady ? user.ladyId : user.gentlemanId;
         jwtData.ipAddress = req.ip;
         jwtData.expire = this.getDatePlus(60 * 5);
         jwtData.username = user.username;
-
+        
         const token = jwt.sign(jwtData.toPlane(), secret);
         
+        const refToken = await this.refreshService.getTokenByUsername(user.username);
+
+        if(refToken) {
+            const currentTime = new Date().getTime();
+            const date = new Date(refToken.expire);
+            const milliseconds = date.getTime();
+            if(currentTime > milliseconds) {
+                await this.refreshService.deleteRefreshToken(refToken.refreshToken);
+            }else {
+                return new LoginInfo(
+                    jwtData.id,
+                    jwtData.username,
+                    token,
+                    refToken.refreshToken,
+                    refToken.expire
+                )
+            }
+        } 
+
         const jwtRefreshData = new JwtRefreshDataDto();
         jwtRefreshData.id = jwtData.id;
         jwtRefreshData.username = jwtData.username;

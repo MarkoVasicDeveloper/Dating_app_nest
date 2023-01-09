@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import * as crypto from 'crypto';
 import { ApiResponse } from 'src/misc/api.response';
+import * as fs from 'fs'; 
 
 @Injectable()
 export class GentlemanService {
@@ -25,10 +26,12 @@ export class GentlemanService {
 
       const savedGentleman = await this.gentlemanService.save(gentleman);
 
+      fs.mkdirSync(`../Storage/Photo/Gentleman/${data.username}`, { recursive: true });
+
       return savedGentleman;
 
     } catch (error) {
-      return new ApiResponse('error',error,  -1001)
+      return new ApiResponse('error',"User already exists",  -1001)
     }
   }
 

@@ -15,6 +15,8 @@ import { JwtService } from './services/jwt/jwt.service';
 import { LadyService } from './services/lady/lady.service';
 import { MiddlewareConsumer, NestModule } from "@nestjs/common";
 import { AuthMiddleware } from './middleware/authMiddleware';
+import { PhotoController } from './controllers/photo/photo.controller';
+import { PhotoService } from './services/photo/photo.service';
 
 @Module({
   imports: [
@@ -29,8 +31,8 @@ import { AuthMiddleware } from './middleware/authMiddleware';
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController],
-  providers: [GentlemanService, LadyService, JwtService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

@@ -4,6 +4,7 @@ import { AddLadyDto } from "src/dto/lady/add.lady.dto";
 import { ApiResponse } from "src/misc/api.response";
 import { Repository } from "typeorm";
 import * as crypto from 'crypto';
+import * as fs from 'fs';
 
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>) {}
@@ -22,10 +23,12 @@ export class LadyService {
 
             const savedLady = await this.ladyService.save(lady);
 
+            fs.mkdirSync(`../Storage/Photo/Lady/${data.username}`, { recursive: true });
+
             return savedLady;
 
         } catch (error) {
-            return new ApiResponse('error', error, -2001);
+            return new ApiResponse('error', 'User already exists!', -2001);
         }
     }
 

@@ -37,6 +37,15 @@ export class Gentleman {
   @Column("int", { name: "years", default: () => "'0'" })
   years: number;
 
+  @Column("json", { name: "conversions", nullable: true })
+  conversions: object | null;
+
+  @Column("json", { name: "blocked", nullable: true })
+  blocked: object | null;
+
+  @Column("json", { name: "conversation_request", nullable: true })
+  conversationRequest: object | null;
+
   @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
   gentlemanAbouts: GentlemanAbout[];
 

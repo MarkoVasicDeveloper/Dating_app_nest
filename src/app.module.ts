@@ -18,6 +18,10 @@ import { AuthMiddleware } from './middleware/authMiddleware';
 import { PhotoController } from './controllers/photo/photo.controller';
 import { PhotoService } from './services/photo/photo.service';
 import MailerService from './services/mailer/mailer.service';
+import { Gateway } from './socket/gateway';
+import { SocketService } from './services/socket/socket.service';
+import { ConversationController } from './controllers/conversation/conversation.contoller';
+import { ConversationService } from './services/conversations/conversations.service';
 
 @Module({
   imports: [
@@ -32,8 +36,8 @@ import MailerService from './services/mailer/mailer.service';
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

@@ -42,4 +42,33 @@ export class LadyService {
         if(!lady) return new ApiResponse('error', 'Wrong username', -2002);
         return lady;
     }
+
+    async getById(id: number):Promise<Lady | ApiResponse> {
+        const lady = await this.ladyService.findOne({
+            where: {
+                ladyId: id
+            }
+        })
+
+        if(!lady) return new ApiResponse('error', 'User is not found', -2002);
+        return lady;
+    }
+    
+    async getByIdAndUsename(id: number, username: string):Promise<Lady | ApiResponse> {
+        const lady = await this.ladyService.findOne({
+            where: {
+                ladyId: id,
+                username
+            }
+        })
+
+        if(!lady) return new ApiResponse('error', 'User is not found', -2002);
+        return lady;
+    }
+
+    async savedUser(data: Lady):Promise<Lady | ApiResponse> {
+        const savedUser = await this.ladyService.save(data);
+        if(!savedUser) return new ApiResponse('error', 'User is not saved!', -5001);
+        return savedUser;
+    }
 }

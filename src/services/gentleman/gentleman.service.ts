@@ -45,4 +45,31 @@ export class GentlemanService {
     if(!gentleman) return new ApiResponse('error', 'Wrong username', -1002);
     return gentleman;
   }
+
+  async getById(id: number):Promise <Gentleman | ApiResponse> {
+    const gentleman = await this.gentlemanService.findOne({
+      where: {
+        gentlemanId: id
+      }
+    })
+    if(!gentleman) return new ApiResponse('error', 'User is not found', -1002);
+    return gentleman;
+  }
+
+  async getByIdAndUsename(id: number, username: string):Promise<Gentleman | ApiResponse>{
+    const gentleman = await this.gentlemanService.findOne({
+      where: {
+        gentlemanId: id,
+        username
+      }
+    })
+    if(!gentleman) return new ApiResponse('error', 'User is not found', -1002);
+    return gentleman;
+  }
+
+  async savedUser(data: Gentleman):Promise<Gentleman | ApiResponse> {
+    const user = await this.gentlemanService.save(data);
+    if(!user) return new ApiResponse('error', 'User is not saved!', -2003);
+    return user;
+  }
 }

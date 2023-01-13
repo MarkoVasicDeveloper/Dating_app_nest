@@ -11,7 +11,7 @@ export class SocketService{
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
                 @InjectRepository(Gentleman) private readonly gentlemanService: Repository<Gentleman>) {}
 
-    async checkUser(token: any, lady: any):Promise<{} | ApiResponse> {
+    async checkUser(token: any, lady: any):Promise<Lady | Gentleman | ApiResponse> {
         const gender = lady === 'true' ? true : false;
         let tokenInfo: JwtDataDto;
 
@@ -34,7 +34,7 @@ export class SocketService{
             })
     
             if(!user) return new ApiResponse('error', 'User is not found!', -1001);
-            return {username: user.username, id: user.ladyId, email: user.email}
+            return user;
         }
         
         const user = await this.gentlemanService.findOne({
@@ -44,6 +44,6 @@ export class SocketService{
         })
 
         if(!user) return new ApiResponse('error', 'User is not found!', -1001);
-        return {username: user.username, id: user.gentlemanId, email: user.email}
+        return user;
     }
 }

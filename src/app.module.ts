@@ -22,6 +22,8 @@ import { Gateway } from './socket/gateway';
 import { SocketService } from './services/socket/socket.service';
 import { ConversationController } from './controllers/conversation/conversation.contoller';
 import { ConversationService } from './services/conversations/conversations.service';
+import { Message } from 'entities/Message';
+import { MessagesService } from './services/message/message.service';
 
 @Module({
   imports: [
@@ -32,12 +34,12 @@ import { ConversationService } from './services/conversations/conversations.serv
       username: 'root',
       password: 'root',
       database: 'dating_app',
-      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken]
+      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message]
     }),
-    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken])
+    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message])
   ],
   controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

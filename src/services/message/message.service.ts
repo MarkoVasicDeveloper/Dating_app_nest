@@ -34,7 +34,10 @@ export class MessagesService {
         const messages = await this.findMessage(data.gentlemanId, data.ladyId);
         if(messages instanceof ApiResponse) return messages;
 
-        messages.message = fillObject(messages.message, {
+        const length = messages.message as any;
+        if(length && length.length > 50) length.shift()
+
+        messages.message = fillObject(length, {
             date: new Date().toISOString(),
             from: data.lady ? data.ladyId : data.gentlemanId,
             message: data.message

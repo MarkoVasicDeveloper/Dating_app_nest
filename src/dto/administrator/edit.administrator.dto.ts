@@ -1,17 +1,20 @@
 import * as validator from 'class-validator';
 
-export class LoginDto {
+export class EditAdministratorDto{
+    @validator.IsNotEmpty()
+    @validator.IsNumber()
+    @validator.IsPositive()
+    id: number
+
     @validator.IsNotEmpty()
     @validator.IsString()
     username: string
+
+    editUsername?: string
 
     @validator.IsNotEmpty()
     @validator.IsString()
     password: string
 
-    @validator.IsNotEmpty()
-    @validator.IsBoolean()
-    lady: boolean
-
-    admin?: boolean
+    editPassword?: string
 }

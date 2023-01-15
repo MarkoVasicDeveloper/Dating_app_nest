@@ -8,21 +8,29 @@ import { ApiResponse } from "src/misc/api.response";
 import { JwtDataDto } from "src/dto/jwt/jwt.dto";
 import * as jwt from 'jsonwebtoken';
 import { secret } from "config/jwtSecret";
-import { LoginInfo } from "src/misc/loginInfo";
 import * as crypto from 'crypto';
 import { JwtRefreshDataDto } from "src/dto/jwt/jwt.refrest.dto";
 import { JwtService } from "src/services/jwt/jwt.service";
-import { RefreshToken } from "entities/RefreshToken";
+import { Lady } from "entities/Lady";
+import { Gentleman } from "entities/Gentleman";
+import { LoginInfo } from "src/misc/loginInfo";
+import { AdministratorService } from "src/services/administrator/administrator.service";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly gentlemanService: GentlemanService,
                 private readonly ladyService: LadyService,
-                private readonly refreshService: JwtService) {}
+                private readonly refreshService: JwtService,
+                private readonly adminService: AdministratorService) {}
 
     @Post('login')
     async login (@Body() data: LoginDto, @Req() req: Request): Promise<ApiResponse | LoginInfo> {
-        const service = data.lady ? this.ladyService : this.gentlemanService;
+        let service: any;
+        if(data.admin && data.admin === true) {
+            service = this.adminService
+        }else{
+            if(data.lady) service = data.lady ? this.ladyService : this.gentlemanService;
+        }
 
         const user = await service.getByUsername(data.username) as any;
 
@@ -35,7 +43,8 @@ export class AuthController {
         if(user.password !== passwordHashString) return new ApiResponse('error', 'Wrong username or password', 3001);
         
         const jwtData = new JwtDataDto();
-        jwtData.id = data.lady ? user.ladyId : user.gentlemanId;
+        jwtData.role = user instanceof Lady ? 'lady' : user instanceof Gentleman ? user.privileges : 'administrator';
+        jwtData.id = user instanceof Lady ? user.ladyId : user instanceof Gentleman ? user.gentlemanId : user.administratorId;
         jwtData.ipAddress = req.ip;
         jwtData.expire = this.getDatePlus(60 * 5);
         jwtData.username = user.username;
@@ -56,12 +65,14 @@ export class AuthController {
                     jwtData.username,
                     token,
                     refToken.refreshToken,
-                    refToken.expire
+                    refToken.expire,
+                    jwtData.role
                 )
             }
         } 
 
         const jwtRefreshData = new JwtRefreshDataDto();
+        jwtRefreshData.role = jwtData.role;
         jwtRefreshData.id = jwtData.id;
         jwtRefreshData.username = jwtData.username;
         jwtRefreshData.expire = this.getDatePlus(60 * 60 * 24 * 31);
@@ -76,7 +87,8 @@ export class AuthController {
             jwtData.username,
             token,
             refreshToken,
-            this.getIsoFormat(jwtRefreshData.expire)
+            this.getIsoFormat(jwtRefreshData.expire),
+            jwtData.role
         )
     }
 

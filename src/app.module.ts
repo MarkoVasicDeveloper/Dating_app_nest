@@ -24,6 +24,10 @@ import { ConversationController } from './controllers/conversation/conversation.
 import { ConversationService } from './services/conversations/conversations.service';
 import { Message } from 'entities/Message';
 import { MessagesService } from './services/message/message.service';
+import { MessagesController } from './controllers/messages/messages.controller';
+import { AdministratorService } from './services/administrator/administrator.service';
+import { AdministratorController } from './controllers/administrator/administrator.controller';
+import { Administrator } from 'entities/Administrator';
 
 @Module({
   imports: [
@@ -34,15 +38,15 @@ import { MessagesService } from './services/message/message.service';
       username: 'root',
       password: 'root',
       database: 'dating_app',
-      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message]
+      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator]
     }),
-    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message])
+    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude('auth/*', 'add/gentleman', 'add/lady').forRoutes('api/*')
+    consumer.apply(AuthMiddleware).exclude('auth/*', 'api/add/gentleman', 'api/add/lady').forRoutes('api/*')
   }
 }

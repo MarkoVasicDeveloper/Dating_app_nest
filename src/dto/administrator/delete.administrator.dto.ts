@@ -1,22 +1,30 @@
 import * as validator from 'class-validator';
 
-export class SaveMessageDto{
+export class DeleteAdminDto{
 
     @validator.IsNotEmpty()
     @validator.IsNumber()
     @validator.IsPositive()
-    gentlemanId: number
-
-    @validator.IsNotEmpty()
-    @validator.IsNumber()
-    @validator.IsPositive()
-    ladyId: number
+    id: number
 
     @validator.IsNotEmpty()
     @validator.IsString()
-    message: string | {}
+    username: string
 
     @validator.IsNotEmpty()
-    @validator.IsBoolean()
-    lady: boolean
+    @validator.IsString()
+    password: string
+
+    @validator.IsNotEmpty()
+    @validator.IsNumber()
+    @validator.IsPositive()
+    deleteId: number
+
+    @validator.IsNotEmpty()
+    @validator.IsString()
+    deleteUsername: string
+
+    @validator.IsNotEmpty()
+    @validator.IsEmail()
+    deleteEmail: string
 }

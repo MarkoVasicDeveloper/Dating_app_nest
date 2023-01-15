@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { Lady } from "entities/Lady";
 import { AddLadyDto } from "src/dto/lady/add.lady.dto";
 import { ApiResponse } from "src/misc/api.response";
 import { LadyService } from "src/services/lady/lady.service";
 import MailerService from "src/services/mailer/mailer.service";
 
-@Controller()
+@Controller('api')
 export class LadyContoller {
     constructor(private readonly ladyService: LadyService,
                 private readonly mailerService: MailerService) {}

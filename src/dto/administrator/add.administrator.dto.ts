@@ -1,6 +1,6 @@
 import * as validator from 'class-validator';
 
-export class LoginDto {
+export class AddAdministratorDto{
     @validator.IsNotEmpty()
     @validator.IsString()
     username: string
@@ -10,8 +10,6 @@ export class LoginDto {
     password: string
 
     @validator.IsNotEmpty()
-    @validator.IsBoolean()
-    lady: boolean
-
-    admin?: boolean
+    @validator.IsEmail()
+    email: string
 }

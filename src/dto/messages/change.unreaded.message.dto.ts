@@ -1,7 +1,6 @@
 import * as validator from 'class-validator';
 
-export class SaveMessageDto{
-
+export class ChangeUnreadedMessageDto{
     @validator.IsNotEmpty()
     @validator.IsNumber()
     @validator.IsPositive()
@@ -13,8 +12,7 @@ export class SaveMessageDto{
     ladyId: number
 
     @validator.IsNotEmpty()
-    @validator.IsString()
-    message: string | {}
+    message: any;
 
     @validator.IsNotEmpty()
     @validator.IsBoolean()

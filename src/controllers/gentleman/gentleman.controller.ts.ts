@@ -5,7 +5,7 @@ import { ApiResponse } from 'src/misc/api.response';
 import MailerService from 'src/services/mailer/mailer.service';
 import { GentlemanService } from '../../services/gentleman/gentleman.service';
 
-@Controller()
+@Controller('api')
 export class GentlemanController {
   constructor(private readonly gentlemanService: GentlemanService,
               private readonly mailerService: MailerService) {}

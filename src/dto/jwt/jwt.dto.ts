@@ -1,4 +1,5 @@
 export class JwtDataDto{
+    role: 'administrator' | 'gentleman' | 'lady' | 'gentlemanPremium' | 'gentlemanVip';
     id: number
     username: string
     ipAddress: string
@@ -6,6 +7,7 @@ export class JwtDataDto{
 
     toPlane() {
         return {
+            role: this.role,
             id: this.id,
             ipAddress: this.ipAddress,
             expire: this.expire,

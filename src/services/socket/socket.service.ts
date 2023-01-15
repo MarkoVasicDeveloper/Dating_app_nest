@@ -21,10 +21,10 @@ export class SocketService{
             return new ApiResponse('error', 'Bad token', -10001);
         }
 
-        // const currentTimestamp = new Date().getTime() / 1000;
-        // if (currentTimestamp >= tokenInfo.expire) {
-        //     return new ApiResponse('error', 'The token has expired', -3002);
-        // }
+        const currentTimestamp = new Date().getTime() / 1000;
+        if (currentTimestamp >= tokenInfo.expire) {
+            return new ApiResponse('error', 'The token has expired', -3002);
+        }
 
         if(gender) {
             const user = await this.ladyService.findOne({

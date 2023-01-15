@@ -5,8 +5,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { GentlemanAbout } from "./GentlemanAbout";
 import { PhotosGentleman } from "./PhotosGentleman";
+import { GentlemanAbout } from "./GentlemanAbout";
 
 @Index("username", ["username"], { unique: true })
 @Index("email", ["email"], { unique: true })
@@ -46,12 +46,19 @@ export class Gentleman {
   @Column("json", { name: "conversation_request", nullable: true })
   conversationRequest: object | null;
 
-  @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
-  gentlemanAbouts: GentlemanAbout[];
+  @Column("enum", {
+    name: "privileges",
+    enum: ["gentleman", "gentlemanPremium", "gentlemanVip"],
+    default: () => "'gentleman'",
+  })
+  privileges: "gentleman" | "gentlemanPremium" | "gentlemanVip";
 
   @OneToMany(
     () => PhotosGentleman,
     (photosGentleman) => photosGentleman.gentleman
   )
   photosGentlemen: PhotosGentleman[];
+
+  @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
+  gentlemanAbouts: GentlemanAbout[];
 }

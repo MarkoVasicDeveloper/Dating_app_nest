@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Get, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Get, Param, Delete, Put } from "@nestjs/common";
 import { Administrator } from "entities/Administrator";
 import { AddAdministratorDto } from "src/dto/administrator/add.administrator.dto";
 import { DeleteAdminDto } from "src/dto/administrator/delete.administrator.dto";
@@ -27,21 +27,21 @@ export class AdministratorController{
         return await this.adminService.editAdministrator(data);
     }
 
-    @Get('getAdmin/:username')
+    @Put('getAdminByUsername/:username')
     @UseGuards(RoleCheckerGard)
     @AllowToRole("administrator")
     async getAdminByUsername(@Param('username') username: string):Promise<Administrator | ApiResponse>{
         return await this.adminService.getByUsername(username);
     }
 
-    @Get('getAdmin/:id')
+    @Put('getAdmin/:id')
     @UseGuards(RoleCheckerGard)
     @AllowToRole("administrator")
     async getAdminById(@Param('id') id: number):Promise<Administrator | ApiResponse>{
         return await this.adminService.getById(id);
     }
 
-    @Get('getAdmin/:email')
+    @Put('getAdminByEmail/:email')
     @UseGuards(RoleCheckerGard)
     @AllowToRole("administrator")
     async getAdminByEmail(@Param('email') email: string):Promise<Administrator | ApiResponse>{
@@ -51,7 +51,7 @@ export class AdministratorController{
     @Delete('admin/delete')
     @UseGuards(RoleCheckerGard)
     @AllowToRole("administrator")
-    async deleteAdmin(data: DeleteAdminDto):Promise<ApiResponse | DeleteResult> {
+    async deleteAdmin(@Body() data: DeleteAdminDto):Promise<ApiResponse | DeleteResult> {
         return await this.adminService.deleteAdmin(data);
     }
 }

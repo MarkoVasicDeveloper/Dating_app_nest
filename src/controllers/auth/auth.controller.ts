@@ -29,9 +29,9 @@ export class AuthController {
         if(data.admin && data.admin === true) {
             service = this.adminService
         }else{
-            if(data.lady) service = data.lady ? this.ladyService : this.gentlemanService;
+            service = data.lady ? this.ladyService : this.gentlemanService;
         }
-
+        
         const user = await service.getByUsername(data.username) as any;
 
         if(!user) return new ApiResponse('error', 'Wrong username or password', 3001);

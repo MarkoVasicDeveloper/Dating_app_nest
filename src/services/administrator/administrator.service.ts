@@ -8,10 +8,12 @@ import * as crypto from 'crypto';
 import { EditAdministratorDto } from "src/dto/administrator/edit.administrator.dto";
 import { passwordHash } from "src/misc/password.hash";
 import { DeleteAdminDto } from "src/dto/administrator/delete.administrator.dto";
+import { JwtService } from "../jwt/jwt.service";
 
 @Injectable()
 export class AdministratorService{
-    constructor(@InjectRepository(Administrator) private readonly adminService: Repository<Administrator>) {}
+    constructor(@InjectRepository(Administrator) private readonly adminService: Repository<Administrator>,
+                private readonly jwtService: JwtService) {}
 
     async createAdmin(data: AddAdministratorDto):Promise<Administrator | ApiResponse> {
         try {
@@ -34,6 +36,7 @@ export class AdministratorService{
                 username
             }
         })
+        
         if(!admin) return new ApiResponse('error', 'Admin is not found!', -15002);
         return admin;
     }
@@ -93,6 +96,9 @@ export class AdministratorService{
         })
 
         if(!deleteAdmin) return new ApiResponse('error', 'Admin is not found!', -15002);
+
+        const refreshToken = await this.jwtService.getTokenByUsername(deleteAdmin.username);
+        await this.jwtService.deleteRefreshToken(refreshToken.refreshToken);
 
         return await this.adminService.delete(deleteAdmin)
     }

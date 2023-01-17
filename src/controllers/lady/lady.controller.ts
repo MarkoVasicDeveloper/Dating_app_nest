@@ -1,5 +1,6 @@
-import { Body, Controller, Post, UseGuards, Get, Param, Delete } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Get, Param, Delete, Put } from "@nestjs/common";
 import { Lady } from "entities/Lady";
+import { BlockTheUserDto } from "src/dto/gentleman/block.the.user.dto";
 import { AddLadyDto } from "src/dto/lady/add.lady.dto";
 import { DeleteLadyDto } from "src/dto/lady/delete.lady.dto";
 import { EditLadyDto } from "src/dto/lady/edit.lady.dto";
@@ -16,8 +17,6 @@ export class LadyContoller {
                 private readonly mailerService: MailerService) {}
 
     @Post('add/lady')
-    @UseGuards(RoleCheckerGard)
-    @AllowToRole('lady', 'administrator')
     async addLady (@Body() data: AddLadyDto): Promise <Lady | ApiResponse> {
         const result = await this.ladyService.addLady(data);
         if(result instanceof Lady) await this.mailerService.sendEmail(result.email, 'hello');
@@ -57,5 +56,12 @@ export class LadyContoller {
     @AllowToRole('administrator')
     async deleteLady(@Body() data: DeleteLadyDto):Promise<ApiResponse | Lady> {
         return await this.ladyService.deleteLady(data);
+    }
+
+    @Put('block/lady')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator', 'gentleman', 'gentlemanPremium', 'gentlemanVip')
+    async blockTheUser(@Body() data: BlockTheUserDto):Promise<ApiResponse> {
+    return await this.ladyService.blockTheLady(data);
     }
 }

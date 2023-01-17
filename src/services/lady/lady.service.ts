@@ -9,6 +9,8 @@ import { EditLadyDto } from "src/dto/lady/edit.lady.dto";
 import { passwordHash } from "src/misc/password.hash";
 import { DeleteLadyDto } from "src/dto/lady/delete.lady.dto";
 import { JwtService } from "../jwt/jwt.service";
+import { BlockTheUserDto } from "src/dto/gentleman/block.the.user.dto";
+import { fillObject } from "src/misc/fill.object";
 
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
@@ -119,4 +121,16 @@ export class LadyService {
 
         return await this.ladyService.remove(user)
     }
+
+    async blockTheLady(data: BlockTheUserDto):Promise<ApiResponse>{
+        const lady = await this.getByIdAndUsename(data.blockId, data.blockUsername);
+        if(lady instanceof ApiResponse) return lady;
+        lady.blocked = fillObject(lady.blocked, {
+          "id": data.id,
+          "username": data.username
+        })
+        const savedGentleman = await this.ladyService.save(lady);
+        if(!savedGentleman) return new ApiResponse('error', 'The user is not blocked!', -2004);
+        return new ApiResponse('ok', 'The user has been blocked!', 200);
+      }
 }

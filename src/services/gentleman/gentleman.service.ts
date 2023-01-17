@@ -10,6 +10,8 @@ import { EditGentlemanDto } from 'src/dto/gentleman/edit.gentleman.dto';
 import { passwordHash } from 'src/misc/password.hash';
 import { DeleteGentlemanDto } from 'src/dto/gentleman/delete.gentleman.dto';
 import { JwtService } from '../jwt/jwt.service';
+import { BlockTheUserDto } from 'src/dto/gentleman/block.the.user.dto';
+import { fillObject } from 'src/misc/fill.object';
 
 @Injectable()
 export class GentlemanService {
@@ -121,5 +123,17 @@ export class GentlemanService {
   fs.rmSync(`../Storage/Photo/Gentleman/${user.username}`, { recursive: true, force: true });
 
   return await this.gentlemanService.remove(user);
+  }
+
+  async blockTheGentleman(data: BlockTheUserDto):Promise<ApiResponse>{
+    const gentleman = await this.getByIdAndUsename(data.blockId, data.blockUsername);
+    if(gentleman instanceof ApiResponse) return gentleman;
+    gentleman.blocked = fillObject(gentleman.blocked, {
+      "id": data.id,
+      "username": data.username
+    })
+    const savedGentleman = await this.gentlemanService.save(gentleman);
+    if(!savedGentleman) return new ApiResponse('error', 'The user is not blocked!', -2004);
+    return new ApiResponse('ok', 'The user has been blocked!', 200);
   }
 }

@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, Param, Delete} from '@nestjs/common';
+import { Body, Controller, Get, Post, Param, Delete, Put} from '@nestjs/common';
 import { UseGuards } from '@nestjs/common/decorators';
 import { Gentleman } from 'entities/Gentleman';
 import { AddGentlemanDto } from 'src/dto/gentleman/add.gentleman.dto';
+import { BlockTheUserDto } from 'src/dto/gentleman/block.the.user.dto';
 import { DeleteGentlemanDto } from 'src/dto/gentleman/delete.gentleman.dto';
 import { EditGentlemanDto } from 'src/dto/gentleman/edit.gentleman.dto';
 import { AllowToRole } from 'src/misc/allow.to.role.descriptor';
@@ -17,8 +18,6 @@ export class GentlemanController {
               private readonly mailerService: MailerService) {}
 
   @Post('add/gentleman')
-  @UseGuards(RoleCheckerGard)
-  @AllowToRole('gentleman', 'gentlemanPremium', 'gentlemanVip', 'administrator')
   async addGentleman(@Body() data: AddGentlemanDto): Promise <Gentleman | ApiResponse> {
     const result = await this.gentlemanService.addGenleman(data);
     if(result instanceof Gentleman) await this.mailerService.sendEmail(result.email, 'hello')
@@ -60,5 +59,12 @@ export class GentlemanController {
   @AllowToRole('administrator')
   async deleteGentleman(@Body() data: DeleteGentlemanDto):Promise<ApiResponse | Gentleman>{
     return await this.gentlemanService.deleteGentleman(data);
+  }
+
+  @Put('block/gentleman')
+  @UseGuards(RoleCheckerGard)
+  @AllowToRole('administrator', 'lady')
+  async blockTheUser(@Body() data: BlockTheUserDto):Promise<ApiResponse> {
+    return await this.gentlemanService.blockTheGentleman(data);
   }
 }

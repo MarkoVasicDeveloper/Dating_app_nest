@@ -11,22 +11,12 @@ export class Administrator {
   })
   administratorId: number;
 
-  @Column("varchar", {
-    name: "username",
-    unique: true,
-    length: 50,
-    default: () => "'0'",
-  })
+  @Column("varchar", { name: "username", unique: true, length: 50 })
   username: string;
 
-  @Column("varchar", {
-    name: "email",
-    unique: true,
-    length: 50,
-    default: () => "'0'",
-  })
+  @Column("varchar", { name: "email", unique: true, length: 50 })
   email: string;
 
-  @Column("varchar", { name: "password", length: 255, default: () => "'0'" })
+  @Column("varchar", { name: "password", length: 255 })
   password: string;
 }

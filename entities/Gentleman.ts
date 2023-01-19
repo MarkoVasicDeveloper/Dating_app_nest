@@ -69,6 +69,9 @@ export class Gentleman {
   @Column("varchar", { name: "city", length: 50 })
   city: string;
 
+  @Column("enum", { name: "verified", enum: ["0", "1"], default: () => "'0'" })
+  verified: "0" | "1";
+
   @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
   gentlemanAbouts: GentlemanAbout[];
 

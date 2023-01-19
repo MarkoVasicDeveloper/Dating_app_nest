@@ -32,9 +32,11 @@ export class AuthController {
             service = data.lady ? this.ladyService : this.gentlemanService;
         }
         
-        const user = await service.getByUsername(data.username) as any;
+        const user = await service.getByUsername(data.username);
 
         if(!user) return new ApiResponse('error', 'Wrong username or password', 3001);
+
+        if(user.verified && user.verified === '0') return new ApiResponse('error', 'Email must be verified!', -20001);
 
         const passwordHash = crypto.createHash('sha512');
         passwordHash.update(data.password);

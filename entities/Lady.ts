@@ -15,27 +15,14 @@ export class Lady {
   @PrimaryGeneratedColumn({ type: "int", name: "lady_id", unsigned: true })
   ladyId: number;
 
-  @Column("varchar", {
-    name: "username",
-    unique: true,
-    length: 50,
-    default: () => "'0'",
-  })
+  @Column("varchar", { name: "username", unique: true, length: 50 })
   username: string;
 
-  @Column("varchar", { name: "password", length: 255, default: () => "'0'" })
+  @Column("varchar", { name: "password", length: 255 })
   password: string;
 
-  @Column("varchar", {
-    name: "email",
-    unique: true,
-    length: 50,
-    default: () => "'0'",
-  })
+  @Column("varchar", { name: "email", unique: true, length: 50 })
   email: string;
-
-  @Column("int", { name: "years", nullable: true })
-  years: number | null;
 
   @Column("json", { name: "conversations", nullable: true })
   conversations: object | null;
@@ -64,6 +51,9 @@ export class Lady {
 
   @Column("varchar", { name: "city", length: 50 })
   city: string;
+
+  @Column("enum", { name: "verified", enum: ["0", "1"], default: () => "'0'" })
+  verified: "0" | "1";
 
   @OneToMany(() => LadyAbout, (ladyAbout) => ladyAbout.lady)
   ladyAbouts: LadyAbout[];

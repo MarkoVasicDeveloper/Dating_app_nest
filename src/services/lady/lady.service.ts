@@ -22,7 +22,11 @@ export class LadyService {
             lady.email = data.email;
             lady.password = passwordHash(data.password);
             lady.username = data.username;
-            lady.years = data.years;
+            lady.city = data.city;
+            lady.dataOfBirth = data.dateOfBirth;
+            lady.state = data.state;
+            lady.notification = data.nocifications;
+            lady.rules = data.rules;
 
             const savedLady = await this.ladyService.save(lady);
 
@@ -97,8 +101,11 @@ export class LadyService {
 
         if(data.editPassword) user.password = passwordHash(data.editPassword);
         if(data.editUsername) user.username = data.editUsername;
-        if(data.editYears) user.years = data.editYears;
         if(data.editEmail) user.email = data.editEmail;
+        if(data.editCity) user.city = data.editCity;
+        if(data.editState) user.state = data.editState;
+        if(data.editDateOfBirth) user.dataOfBirth = data.editDateOfBirth;
+        if(data.editNocifications) user.notification = data.editNocifications;
 
         return await this.ladyService.save(user);
     }

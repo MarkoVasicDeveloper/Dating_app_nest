@@ -12,6 +12,7 @@ export class ChangeUnreadedMessageDto{
     ladyId: number
 
     @validator.IsNotEmpty()
+    @validator.IsString()
     message: any;
 
     @validator.IsNotEmpty()

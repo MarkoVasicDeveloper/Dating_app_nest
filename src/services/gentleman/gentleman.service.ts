@@ -29,7 +29,10 @@ export class GentlemanService {
       gentleman.email = data.email;
       gentleman.password = passwordStringHash;
       gentleman.username = data.username;
-      gentleman.years = data.years;
+      gentleman.city = data.city;
+      gentleman.notifications = data.nocifications;
+      gentleman.rules = data.rules;
+      gentleman.dateOfBirth = data.dateOfBirth;
 
       const savedGentleman = await this.gentlemanService.save(gentleman);
 
@@ -101,8 +104,11 @@ export class GentlemanService {
 
     if(data.editPassword) user.password = passwordHash(data.editPassword);
     if(data.editUsername) user.username = data.editUsername;
-    if(data.editYears) user.years = data.editYears;
     if(data.editeEmail) user.email = data.editeEmail;
+    if(data.editCity) user.city = data.editCity;
+    if(data.editState) user.state = data.editState;
+    if(data.editDateOfBirth) user.dateOfBirth = data.editDateOfBirth;
+    if(data.editNocifications) user.notifications = data.editNocifications;
 
     return await this.gentlemanService.save(user);
   }

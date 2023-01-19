@@ -24,6 +24,9 @@ export class PhotosLady {
   @Column("varchar", { name: "path", length: 255 })
   path: string;
 
+  @Column("enum", { name: "thumb", enum: ["0", "1"], default: () => "'0'" })
+  thumb: "0" | "1";
+
   @ManyToOne(() => Lady, (lady) => lady.photosLadies, {
     onDelete: "CASCADE",
     onUpdate: "NO ACTION",

@@ -28,6 +28,8 @@ import { MessagesController } from './controllers/messages/messages.controller';
 import { AdministratorService } from './services/administrator/administrator.service';
 import { AdministratorController } from './controllers/administrator/administrator.controller';
 import { Administrator } from 'entities/Administrator';
+import { LadyAboutService } from './services/lady_about/lady.about.service';
+import { LadyAboutController } from './controllers/lady_about/lady.about.controller';
 
 @Module({
   imports: [
@@ -42,8 +44,8 @@ import { Administrator } from 'entities/Administrator';
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, HttpStatus, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, HttpException, HttpStatus, Post, UploadedFile, UseInterceptors, UseGuards } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express/multer";
 import { PhotosGentleman } from "entities/PhotosGentleman";
 import { PhotosLady } from "entities/PhotosLady";
@@ -9,7 +9,10 @@ import { ApiResponse } from "src/misc/api.response";
 import { PhotoService } from "src/services/photo/photo.service";
 import * as fs from 'fs';
 import * as sharp from 'sharp';
-import { Param } from "@nestjs/common/decorators";
+import { Delete, Get, Param, Put } from "@nestjs/common/decorators";
+import { DeleteResult } from "typeorm";
+import { RoleCheckerGard } from "src/roleCheckerGard/role.checker.gard";
+import { AllowToRole } from "src/misc/allow.to.role.descriptor";
 
 @Controller('api')
 export class PhotoController {
@@ -94,4 +97,25 @@ export class PhotoController {
           })
           .toFile(photoConfig.destination + folder + photoOriginalName);
       }
+
+    @Get('getAllPhoto/:id/:lady')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator','gentleman','gentlemanPremium','gentlemanVip','lady')
+    async getAllPhoto(@Param('id') id: number, @Param('lady') lady: string):Promise<PhotosGentleman[] | PhotosLady[] | ApiResponse> {
+        return await this.photoService.getAllPhoto(id, lady);
+    }
+
+    @Delete('delete/photo/:id/:lady/:fileName')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator','gentleman','gentlemanPremium','gentlemanVip','lady')
+    async deletePhoto(@Param('id') id: number, @Param('lady') lady: string, @Param('fileName') fileName: string):Promise<ApiResponse | DeleteResult> {
+        return await this.photoService.deletePhoto(id, fileName, lady);
+    }
+
+    @Put('setThumb/:id/:lady/:fileName')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator','gentleman','gentlemanPremium','gentlemanVip','lady')
+    async setThumb(@Param('id') id: number, @Param('lady') lady: string, @Param('fileName') fileName: string):Promise<ApiResponse | PhotosGentleman | PhotosLady> {
+        return await this.photoService.changeThumb(id, fileName, lady);
+    }
 }

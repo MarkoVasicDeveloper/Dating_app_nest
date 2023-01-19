@@ -5,11 +5,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { PhotosGentleman } from "./PhotosGentleman";
 import { GentlemanAbout } from "./GentlemanAbout";
+import { PhotosGentleman } from "./PhotosGentleman";
 
-@Index("username", ["username"], { unique: true })
 @Index("email", ["email"], { unique: true })
+@Index("username", ["username"], { unique: true })
 @Entity("gentleman", { schema: "dating_app" })
 export class Gentleman {
   @PrimaryGeneratedColumn({ type: "int", name: "gentleman_id", unsigned: true })
@@ -34,9 +34,6 @@ export class Gentleman {
   })
   email: string;
 
-  @Column("int", { name: "years", default: () => "'0'" })
-  years: number;
-
   @Column("json", { name: "conversations", nullable: true })
   conversations: object | null;
 
@@ -53,12 +50,31 @@ export class Gentleman {
   })
   privileges: "gentleman" | "gentlemanPremium" | "gentlemanVip";
 
+  @Column("enum", { name: "rules", enum: ["0", "1"], default: () => "'0'" })
+  rules: "0" | "1";
+
+  @Column("enum", {
+    name: "notifications",
+    enum: ["0", "1"],
+    default: () => "'0'",
+  })
+  notifications: "0" | "1";
+
+  @Column("date", { name: "date_of_birth" })
+  dateOfBirth: string;
+
+  @Column("varchar", { name: "state", length: 50 })
+  state: string;
+
+  @Column("varchar", { name: "city", length: 50 })
+  city: string;
+
+  @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
+  gentlemanAbouts: GentlemanAbout[];
+
   @OneToMany(
     () => PhotosGentleman,
     (photosGentleman) => photosGentleman.gentleman
   )
   photosGentlemen: PhotosGentleman[];
-
-  @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
-  gentlemanAbouts: GentlemanAbout[];
 }

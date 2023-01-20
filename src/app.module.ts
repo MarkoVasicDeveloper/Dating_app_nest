@@ -34,6 +34,7 @@ import { VerificationAndPrivileguesService } from './services/verification_and_p
 import { VerificationAndPrivilegesController } from './controllers/verification_and_privileges/verification.privileges.controller';
 import { GentlemanAboutService } from './services/gentleman_about/gentleman.about.service';
 import { GentlemanAboutController } from './controllers/gentleman_about/gentleman.about.controller';
+import { ReportController } from './controllers/report/report.controller';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { GentlemanAboutController } from './controllers/gentleman_about/gentlema
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController],
   providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService],
 })
 export class AppModule implements NestModule{

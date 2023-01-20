@@ -10,6 +10,7 @@ import { LadyService } from "src/services/lady/lady.service";
 import { MessagesService } from "src/services/message/message.service";
 import { SocketService } from "src/services/socket/socket.service";
 
+export let activeUsers = 0;
 const online = [];
 
 @WebSocketGateway(3001,{
@@ -45,6 +46,7 @@ export class Gateway implements OnModuleInit, OnGatewayDisconnect{
                     socketId: socket.id
                 }
                 online.push(user);
+                activeUsers += 1;
             }
         })
     }
@@ -70,6 +72,7 @@ export class Gateway implements OnModuleInit, OnGatewayDisconnect{
             })
 
             online.splice(index, 1);
+            activeUsers -= 1;
         }
     }
 

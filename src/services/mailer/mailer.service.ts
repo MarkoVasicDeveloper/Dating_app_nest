@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { google } from 'googleapis';
 import { mailerConfig } from 'config/mailer';
+import { GentlemanService } from '../gentleman/gentleman.service';
+import { LadyService } from '../lady/lady.service';
 
 @Injectable()
 export default class MailerService {
+  constructor(private readonly gentlemanService: GentlemanService,
+              private readonly ladyService: LadyService) {}
   async sendEmail(email: string, body: string) {
     const Oauth2 = new google.auth.OAuth2(
         mailerConfig.client_id,
@@ -48,6 +52,20 @@ export default class MailerService {
   async emailMarketing(data: {email:string, body: string}[]) {
     data.forEach(async (object:any) => {
       await this.sendEmail(object.email, object.body);
+    })
+  }
+
+  async sendMailToAllGentleman(data: {body: string}) {
+    const allGentleman = await this.gentlemanService.getAll();
+    allGentleman.forEach(async gentleman => {
+      await this.sendEmail(gentleman.email, data.body)
+    })
+  }
+
+  async sendMailToAllLady(data: {body: string}) {
+    const allLady = await this.ladyService.getAll();
+    allLady.forEach(async lady => {
+      await this.sendEmail(lady.email, data.body)
     })
   }
 }

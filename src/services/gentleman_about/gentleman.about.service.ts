@@ -5,6 +5,7 @@ import { EditGentlemanAboutDto } from "src/dto/gentleman_about/edit.gentleman.ab
 import { ApiResponse } from "src/misc/api.response";
 import { Repository } from "typeorm";
 import { Injectable } from '@nestjs/common';
+import { AboutReportDto } from "src/dto/report/about.report";
 
 @Injectable()
 export class GentlemanAboutService{
@@ -57,5 +58,37 @@ export class GentlemanAboutService{
         const savedAbout = await this.gentlemanAboutService.save(existsAbout);
         if(!savedAbout) return new ApiResponse('error', 'The about data is not saved!', -17002);
         return savedAbout;
+    }
+
+    async gentlemanAboutBasicReport():Promise<AboutReportDto> {
+        const educationArray = ['primary school', 'high school', 'college'];
+        const educationReport = {} as any;
+
+        educationArray.forEach(async(education:'primary school' | 'high school' | 'college') => {
+            const all = await this.gentlemanAboutService.count({
+                where: {educations: education}
+            });
+            educationReport[education] = all
+        })
+
+        const maritalStatusArray = ['married', 'free', 'complicated', 'married,but'];
+        const maritalStatusReport = {} as any;
+
+        maritalStatusArray.forEach(async(status: 'married' | 'free' | 'complicated' | 'married,but') => {
+            const all = await this.gentlemanAboutService.count({
+                where: {maritalStatus: status}
+            });
+            maritalStatusReport[status] = all
+        })
+        const trueInformation = await this.gentlemanAboutService.count({
+            where: {trueInformation: '1'}
+        });
+
+        const report = new AboutReportDto();
+        report.educations = educationReport;
+        report.maritalStatus = maritalStatusReport;
+        report.trueInformation = trueInformation;
+
+        return report;
     }
 }

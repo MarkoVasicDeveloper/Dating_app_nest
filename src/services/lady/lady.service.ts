@@ -11,6 +11,7 @@ import { DeleteLadyDto } from "src/dto/lady/delete.lady.dto";
 import { JwtService } from "../jwt/jwt.service";
 import { BlockTheUserDto } from "src/dto/gentleman/block.the.user.dto";
 import { fillObject } from "src/misc/fill.object";
+import { ReportDto } from "src/dto/report/report.dto";
 
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
@@ -139,5 +140,25 @@ export class LadyService {
         const savedGentleman = await this.ladyService.save(lady);
         if(!savedGentleman) return new ApiResponse('error', 'The user is not blocked!', -2004);
         return new ApiResponse('ok', 'The user has been blocked!', 200);
-      }
+    }
+
+    async getAll():Promise<Lady[]> {
+        return await this.ladyService.find();
+    }
+
+    async ladyReport():Promise<ReportDto> {
+        const all = await this.ladyService.find();
+        const verified = await this.ladyService.count({
+            where: {
+            verified: '1'
+            }
+        });
+        const nonVerified = all.length - verified;
+        const report = new ReportDto();
+        report.all = all.length;
+        report.allNonVerified = nonVerified;
+        report.allVerified = verified;
+        report.allPrivileges = null
+        return report;
+    }
 }

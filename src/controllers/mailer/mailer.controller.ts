@@ -21,4 +21,18 @@ export class MailerController{
     async sendMultiplyMail(data: SendMailDto[]) {
         return await this.mailerService.emailMarketing(data);
     }
+
+    @Post('sendEmail/allGentleman')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator')
+    async sendMailToAllGentleman(data: {body:string}) {
+        return await this.mailerService.sendMailToAllGentleman(data);
+    }
+
+    @Post('sendEmail/allLady')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator')
+    async sendMailToAllLady(data: {body:string}) {
+        return await this.mailerService.sendMailToAllLady(data);
+    }
 }

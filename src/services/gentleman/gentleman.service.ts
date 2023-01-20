@@ -12,6 +12,7 @@ import { DeleteGentlemanDto } from 'src/dto/gentleman/delete.gentleman.dto';
 import { JwtService } from '../jwt/jwt.service';
 import { BlockTheUserDto } from 'src/dto/gentleman/block.the.user.dto';
 import { fillObject } from 'src/misc/fill.object';
+import { ReportDto } from 'src/dto/report/report.dto';
 
 @Injectable()
 export class GentlemanService {
@@ -142,5 +143,42 @@ export class GentlemanService {
     const savedGentleman = await this.gentlemanService.save(gentleman);
     if(!savedGentleman) return new ApiResponse('error', 'The user is not blocked!', -2004);
     return new ApiResponse('ok', 'The user has been blocked!', 200);
+  }
+
+  async getAll():Promise<Gentleman[]> {
+    return await this.gentlemanService.find();
+  }
+
+  async gentlemanReport():Promise<ReportDto> {
+    const all = await this.gentlemanService.find();
+    const verified = await this.gentlemanService.count({
+      where: {
+        verified: '1'
+      }
+    });
+    const nonVerified = all.length - verified;
+
+    const gentlemanVip = await this.gentlemanService.count({
+      where: {
+        privileges: 'gentlemanVip'
+      }
+    });
+
+    const gentlemanPremium = await this.gentlemanService.count({
+      where: {
+        privileges: 'gentlemanPremium'
+      }
+    });
+    const gentleman = all.length - gentlemanVip - gentlemanPremium;
+    const report = new ReportDto();
+    report.all = all.length;
+    report.allNonVerified = nonVerified;
+    report.allVerified = verified;
+    report.allPrivileges = {
+      gentleman,
+      gentlemanPremium,
+      gentlemanVip
+    }
+    return report;
   }
 }

@@ -44,4 +44,10 @@ export default class MailerService {
       return error;
     }
   }
+
+  async emailMarketing(data: {email:string, body: string}[]) {
+    data.forEach(async (object:any) => {
+      await this.sendEmail(object.email, object.body);
+    })
+  }
 }

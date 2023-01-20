@@ -1,10 +1,21 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Gentleman } from "./Gentleman";
 
 @Index("FK_gentleman_about_gentleman", ["gentlemanId"], {})
 @Entity("gentleman_about", { schema: "dating_app" })
 export class GentlemanAbout {
-  @Column("int", { primary: true, name: "gentleman_about_id", unsigned: true })
+  @PrimaryGeneratedColumn({
+    type: "int",
+    name: "gentleman_about_id",
+    unsigned: true,
+  })
   gentlemanAboutId: number;
 
   @Column("int", { name: "gentleman_id", unsigned: true })

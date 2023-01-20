@@ -5,7 +5,7 @@ import { AllowToRole } from "src/misc/allow.to.role.descriptor";
 import { ApiResponse } from "src/misc/api.response";
 import { Gentleman } from "entities/Gentleman";
 
-@Controller('api')
+@Controller()
 export class VerificationAndPrivilegesController{
     constructor(private readonly privilegesService: VerificationAndPrivileguesService) {}
 
@@ -14,7 +14,7 @@ export class VerificationAndPrivilegesController{
         return await this.privilegesService.verifiedEmail(email);
     }
 
-    @Put('changePrivileges/:privileges/:id')
+    @Put('api/changePrivileges/:privileges/:id')
     @UseGuards(RoleCheckerGard)
     @AllowToRole('administrator')
     async changePrivileges(@Param('privileges') privileges: 'gentleman' | 'gentlemanPremium' | 'gentlemanVip', @Param('id') id: number):Promise<ApiResponse | Gentleman> {

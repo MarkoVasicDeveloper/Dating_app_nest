@@ -27,7 +27,7 @@ export class AddLadyDto{
 
     @validator.IsNotEmpty()
     @validator.IsIn(['0','1'])
-    nocifications: '0' | '1'
+    notifications: '0' | '1'
 
     @validator.IsNotEmpty()
     @validator.IsString()

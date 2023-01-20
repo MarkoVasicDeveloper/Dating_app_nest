@@ -30,9 +30,9 @@ export class GentlemanService {
       gentleman.password = passwordStringHash;
       gentleman.username = data.username;
       gentleman.city = data.city;
-      gentleman.notifications = data.nocifications;
+      gentleman.notifications = data.notifications;
       gentleman.rules = data.rules;
-      gentleman.dateOfBirth = data.dateOfBirth;
+      gentleman.dateOfBirth = new Date(data.dateOfBirth).toString().slice(0,15);
 
       const savedGentleman = await this.gentlemanService.save(gentleman);
 
@@ -41,6 +41,7 @@ export class GentlemanService {
       return savedGentleman;
 
     } catch (error) {
+      console.log(error)
       return new ApiResponse('error',"User already exists",  -1001)
     }
   }
@@ -108,7 +109,7 @@ export class GentlemanService {
     if(data.editCity) user.city = data.editCity;
     if(data.editState) user.state = data.editState;
     if(data.editDateOfBirth) user.dateOfBirth = data.editDateOfBirth;
-    if(data.editNocifications) user.notifications = data.editNocifications;
+    if(data.editNotifications) user.notifications = data.editNotifications;
 
     return await this.gentlemanService.save(user);
   }

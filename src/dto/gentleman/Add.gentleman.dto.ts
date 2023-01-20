@@ -22,12 +22,12 @@ export class AddGentlemanDto {
     state: string
 
     @validator.IsNotEmpty()
-    @validator.IsBoolean()
+    @validator.IsIn(['0','1'])
     rules: '0' | '1'
 
     @validator.IsNotEmpty()
-    @validator.IsBoolean()
-    nocifications: '0' | '1'
+    @validator.IsIn(['0','1'])
+    notifications: '0' | '1'
 
     @validator.IsNotEmpty()
     @validator.IsString()

@@ -8,8 +8,8 @@ import {
 import { GentlemanAbout } from "./GentlemanAbout";
 import { PhotosGentleman } from "./PhotosGentleman";
 
-@Index("email", ["email"], { unique: true })
 @Index("username", ["username"], { unique: true })
+@Index("email", ["email"], { unique: true })
 @Entity("gentleman", { schema: "dating_app" })
 export class Gentleman {
   @PrimaryGeneratedColumn({ type: "int", name: "gentleman_id", unsigned: true })
@@ -60,7 +60,7 @@ export class Gentleman {
   })
   notifications: "0" | "1";
 
-  @Column("date", { name: "date_of_birth" })
+  @Column("varchar", { name: "date_of_birth", length: 50 })
   dateOfBirth: string;
 
   @Column("varchar", { name: "state", length: 50 })

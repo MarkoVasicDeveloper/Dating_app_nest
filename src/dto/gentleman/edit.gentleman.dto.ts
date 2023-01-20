@@ -37,7 +37,7 @@ export class EditGentlemanDto{
     @validator.IsOptional()
     @validator.IsNotEmpty()
     @validator.IsIn(['0','1'])
-    editNocifications?: '0' | '1'
+    editNotifications?: '0' | '1'
 
     @validator.IsOptional()
     @validator.IsNotEmpty()

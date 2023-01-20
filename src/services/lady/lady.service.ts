@@ -23,9 +23,9 @@ export class LadyService {
             lady.password = passwordHash(data.password);
             lady.username = data.username;
             lady.city = data.city;
-            lady.dataOfBirth = data.dateOfBirth;
+            lady.dataOfBirth = new Date(data.dateOfBirth).toString().slice(0,15);
             lady.state = data.state;
-            lady.notification = data.nocifications;
+            lady.notification = data.notifications;
             lady.rules = data.rules;
 
             const savedLady = await this.ladyService.save(lady);
@@ -105,7 +105,7 @@ export class LadyService {
         if(data.editCity) user.city = data.editCity;
         if(data.editState) user.state = data.editState;
         if(data.editDateOfBirth) user.dataOfBirth = data.editDateOfBirth;
-        if(data.editNocifications) user.notification = data.editNocifications;
+        if(data.editNotifications) user.notification = data.editNotifications;
 
         return await this.ladyService.save(user);
     }

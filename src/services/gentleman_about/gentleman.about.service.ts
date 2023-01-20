@@ -19,6 +19,7 @@ export class GentlemanAboutService{
         if(existsAbout) return new ApiResponse('error', 'The data for this user already exists!', -17001);
 
         const about = new GentlemanAbout();
+        about.gentlemanId = data.gentlemanId;
         about.about = data.about;
         about.aboutThePerson = data.aboutThePerson;
         about.children = data.children;

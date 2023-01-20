@@ -32,6 +32,8 @@ import { LadyAboutService } from './services/lady_about/lady.about.service';
 import { LadyAboutController } from './controllers/lady_about/lady.about.controller';
 import { VerificationAndPrivileguesService } from './services/verification_and_privileges/verification.privileges.service';
 import { VerificationAndPrivilegesController } from './controllers/verification_and_privileges/verification.privileges.controller';
+import { GentlemanAboutService } from './services/gentleman_about/gentleman.about.service';
+import { GentlemanAboutController } from './controllers/gentleman_about/gentleman.about.controller';
 
 @Module({
   imports: [
@@ -46,8 +48,8 @@ import { VerificationAndPrivilegesController } from './controllers/verification_
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

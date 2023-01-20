@@ -16,13 +16,13 @@ export class EditLadyDto{
     @validator.IsOptional()
     @validator.IsNotEmpty()
     @validator.IsString()
-    @validator.Length(6, 50)
+    @validator.Length(3, 50)
     editUsername?: string
 
     @validator.IsOptional()
     @validator.IsNotEmpty()
     @validator.IsString()
-    @validator.Length(3, 50)
+    @validator.Length(6, 50)
     editPassword?: string
 
     @validator.IsOptional()
@@ -38,7 +38,7 @@ export class EditLadyDto{
     @validator.IsOptional()
     @validator.IsNotEmpty()
     @validator.IsString()
-    editNocifications?: '0' | '1'
+    editNotifications?: '0' | '1'
 
     @validator.IsOptional()
     @validator.IsNotEmpty()

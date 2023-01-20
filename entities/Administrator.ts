@@ -1,7 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
-@Index("email", ["email"], { unique: true })
 @Index("username", ["username"], { unique: true })
+@Index("email", ["email"], { unique: true })
 @Entity("administrator", { schema: "dating_app" })
 export class Administrator {
   @PrimaryGeneratedColumn({

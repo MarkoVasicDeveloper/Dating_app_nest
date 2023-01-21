@@ -67,4 +67,18 @@ export class GentlemanController {
   async blockTheUser(@Body() data: BlockTheUserDto):Promise<ApiResponse> {
     return await this.gentlemanService.blockTheGentleman(data);
   }
+
+  @Get('get/allGentleman/:page')
+  @UseGuards(RoleCheckerGard)
+  @AllowToRole('administrator', 'lady')
+  async getAll(@Param('page') page: number):Promise<Gentleman[]> {
+    return await this.gentlemanService.getAll(page);
+  }
+
+  @Get('get/gentlemanByPrivileges/:privileges/:page')
+  @UseGuards(RoleCheckerGard)
+  @AllowToRole('administrator', 'lady')
+  async getAllByPrivileges(@Param('page') page: number, @Param('privileges') privileges: 'gentleman' | 'gentlemanPremium' | 'gentlemanVip'):Promise<Gentleman[]> {
+    return await this.gentlemanService.getByPrivileges(privileges, page);
+  }
 }

@@ -71,32 +71,16 @@ export class PhotoController {
 
         const savedPhoto = await this.photoService.addPhoto(photoObject);
         
-        if(!savedPhoto) return new ApiResponse('error', 'Photo is not saved!',-5001);
+        if(savedPhoto instanceof ApiResponse) return savedPhoto;
 
         const folder = lady === 'true' ? `Lady/${username}/` : `Gentleman/${username}/`
         
-        await this.sharpResize(photo.path, folder, photo.filename, 800, 600);
+        await sharpResize(photo.path, folder, photo.filename, 800, 600);
 
         fs.unlinkSync(photo.path);
         
         return savedPhoto;
     }
-
-    private async sharpResize(
-        path: string,
-        folder: string,
-        photoOriginalName: string,
-        width: number,
-        height: number,
-      ) {
-        await sharp(path)
-          .resize({
-            width: width,
-            height: height,
-            fit: 'fill',
-          })
-          .toFile(photoConfig.destination + folder + photoOriginalName);
-      }
 
     @Get('getAllPhoto/:id/:lady')
     @UseGuards(RoleCheckerGard)
@@ -119,3 +103,19 @@ export class PhotoController {
         return await this.photoService.changeThumb(id, fileName, lady);
     }
 }
+
+export async function sharpResize(
+    path: string,
+    folder: string,
+    photoOriginalName: string,
+    width: number,
+    height: number,
+  ) {
+    await sharp(path)
+      .resize({
+        width: width,
+        height: height,
+        fit: 'fill',
+      })
+      .toFile(photoConfig.destination + folder + photoOriginalName);
+  }

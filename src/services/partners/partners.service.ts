@@ -5,6 +5,7 @@ import { AddPartnersDto } from 'src/dto/partners/add.partners.dto';
 import { EditPartnersDto } from 'src/dto/partners/edit.partners.dto';
 import { ApiResponse } from 'src/misc/api.response';
 import { DeleteResult, Repository } from 'typeorm';
+import * as fs from 'fs';
 
 @Injectable()
 export class PartnersService{
@@ -19,6 +20,7 @@ export class PartnersService{
 
             const savedPartner = await this.partnersService.save(partner);
             if(!savedPartner) return new ApiResponse('error', 'The partner is not saved!', -30002);
+            fs.mkdirSync(`../Storage/Photo/Partners/${data.name}`, { recursive: true });
             return savedPartner;
         } catch (error) {
             return new ApiResponse('error','The partner already exists!', -30001);
@@ -37,6 +39,17 @@ export class PartnersService{
         const savedPartner = await this.partnersService.save(partner);
         if(!savedPartner) return new ApiResponse('error', 'The partner is not saved!', -30002);
         return savedPartner;
+    }
+
+    async getById(id: number):Promise<ApiResponse | Partners> {
+        const partner = await this.partnersService.findOne({
+            where:{
+                partnerId: id
+            },
+            relations: ['produces']
+        });
+        if(!partner) return new ApiResponse('error', 'The partner is not found!', -30003);
+        return partner;
     }
 
     async deletePartner(partnerId: number):Promise<DeleteResult | ApiResponse> {

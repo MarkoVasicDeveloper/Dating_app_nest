@@ -43,6 +43,12 @@ import { GiftService } from './services/gift/gift.service';
 import { Partners } from 'entities/Partners';
 import { PartnersPhoto } from 'entities/PartnersPhoto';
 import { Produces } from 'entities/Produces';
+import { PartnersController } from './controllers/partners/partners.controller';
+import { PartnersService } from './services/partners/partners.service';
+import { ProducePhotoService } from './services/produce_photo/produce.photo.service';
+import { ProducePhotoController } from './controllers/produce_photo/produce.photo.controller';
+import { ProducesService } from './services/produces/produces.service';
+import { ProducesController } from './controllers/produces/produces.controller';
 
 @Module({
   imports: [
@@ -57,8 +63,8 @@ import { Produces } from 'entities/Produces';
     }),
     TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces])
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController, PasswordResetController, GiftController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController, PasswordResetController, GiftController, PartnersController, ProducePhotoController, ProducesController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService, PartnersService, ProducePhotoService, ProducesService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

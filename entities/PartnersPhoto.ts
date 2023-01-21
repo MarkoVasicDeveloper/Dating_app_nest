@@ -6,28 +6,28 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Partners } from "./Partners";
+import { Produces } from "./Produces";
 
-@Index("FK_partners_photo_partners", ["partnerId"], {})
+@Index("FK_partners_photo_partners", ["produceId"], {})
 @Entity("partners_photo", { schema: "dating_app" })
 export class PartnersPhoto {
   @PrimaryGeneratedColumn({
     type: "int",
-    name: "partners_photo",
+    name: "partners_photo_id",
     unsigned: true,
   })
-  partnersPhoto: number;
+  partnersPhotoId: number;
 
-  @Column("int", { name: "partner_id", unsigned: true, default: () => "'0'" })
-  partnerId: number;
+  @Column("int", { name: "produce_id", unsigned: true, default: () => "'0'" })
+  produceId: number;
 
-  @Column("varchar", { name: "path", length: 50 })
+  @Column("varchar", { name: "path", length: 255 })
   path: string;
 
-  @ManyToOne(() => Partners, (partners) => partners.partnersPhotos, {
+  @ManyToOne(() => Produces, (produces) => produces.partnersPhotos, {
     onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
-  @JoinColumn([{ name: "partner_id", referencedColumnName: "partnerId" }])
-  partner: Partners;
+  @JoinColumn([{ name: "produce_id", referencedColumnName: "produceId" }])
+  produce: Produces;
 }

@@ -32,7 +32,7 @@ export class GiftController{
         return await this.giftService.getByIdOrName(id, name);
     }
 
-    @Get('get/allGiftCategory')
+    @Put('get/allGiftCategory')
     @UseGuards(RoleCheckerGard)
     @AllowToRole('administrator', 'gentleman', 'gentlemanPremium', 'gentlemanVip', 'lady')
     async getAllGiftCategory():Promise<GiftCategory[]> {

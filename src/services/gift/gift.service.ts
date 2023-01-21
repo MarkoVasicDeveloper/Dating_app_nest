@@ -48,7 +48,7 @@ export class GiftService{
 
     async getAllCategory():Promise<GiftCategory[]> {
         return await this.giftService.find({
-            relations: ['partners']
+            relations: ["partners"]
         });
     }
 

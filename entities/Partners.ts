@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { GiftCategory } from "./GiftCategory";
-import { PartnersPhoto } from "./PartnersPhoto";
+import { Produces } from "./Produces";
 
 @Index("name", ["name"], { unique: true })
 @Index("FK__gift_category", ["giftCategoryId"], {})
@@ -35,6 +35,6 @@ export class Partners {
   ])
   giftCategory: GiftCategory;
 
-  @OneToMany(() => PartnersPhoto, (partnersPhoto) => partnersPhoto.partner)
-  partnersPhotos: PartnersPhoto[];
+  @OneToMany(() => Produces, (produces) => produces.partner)
+  produces: Produces[];
 }

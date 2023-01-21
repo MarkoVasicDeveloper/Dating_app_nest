@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body, Delete, Param } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Delete, Param, Get, Put } from '@nestjs/common';
 import { Partners } from 'entities/Partners';
 import { AddPartnersDto } from 'src/dto/partners/add.partners.dto';
 import { EditPartnersDto } from 'src/dto/partners/edit.partners.dto';
@@ -24,6 +24,13 @@ export class PartnersController{
     @AllowToRole('administrator')
     async editPartners(@Body() data: EditPartnersDto):Promise<ApiResponse | Partners> {
         return await this.partnersService.editPartner(data);
+    }
+
+    @Put('partners/:id')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator', 'gentleman', 'gentlemanPremium', 'gentlemanVip', 'lady')
+    async getPartner(@Param('id') id: number):Promise<ApiResponse | Partners> {
+        return await this.partnersService.getById(id);
     }
 
     @Delete('delete/partners/:id')

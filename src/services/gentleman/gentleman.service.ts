@@ -146,11 +146,15 @@ export class GentlemanService {
     return new ApiResponse('ok', 'The user has been blocked!', 200);
   }
 
-  async getAll():Promise<Gentleman[]> {
+  async getAll(page: number | null = 1):Promise<Gentleman[]> {
     return await this.gentlemanService.find({
-      relations: ['gentlemanAbout'],
-      take: 50
+      relations: ['gentlemanAbouts'],
+      take: 50 * page
     });
+  }
+
+  async getByPrivileges(privileges: 'gentleman' | 'gentlemanPremium' | 'gentlemanVip', page: number | null = 1) {
+    return await this.gentlemanService.find({where:{privileges}, take: 50 * page})
   }
 
   async gentlemanReport():Promise<ReportDto> {

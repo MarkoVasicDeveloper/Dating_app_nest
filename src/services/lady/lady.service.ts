@@ -143,10 +143,10 @@ export class LadyService {
         return new ApiResponse('ok', 'The user has been blocked!', 200);
     }
 
-    async getAll():Promise<Lady[]> {
+    async getAll(page: number | null = 1):Promise<Lady[]> {
         return await this.ladyService.find({
-            relations: ['ladyAbout'],
-            take: 50
+            relations: ['ladyAbouts'],
+            take: 50 * page
         });
     }
 

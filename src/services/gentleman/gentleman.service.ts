@@ -73,7 +73,8 @@ export class GentlemanService {
       where: {
         gentlemanId: id,
         username
-      }
+      },
+      relations: ['gentlemanAbout']
     })
     if(!gentleman) return new ApiResponse('error', 'User is not found', -1002);
     return gentleman;
@@ -146,7 +147,10 @@ export class GentlemanService {
   }
 
   async getAll():Promise<Gentleman[]> {
-    return await this.gentlemanService.find();
+    return await this.gentlemanService.find({
+      relations: ['gentlemanAbout'],
+      take: 50
+    });
   }
 
   async gentlemanReport():Promise<ReportDto> {

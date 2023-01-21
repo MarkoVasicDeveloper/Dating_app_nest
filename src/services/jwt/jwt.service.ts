@@ -27,6 +27,12 @@ export class JwtService {
         return token;
     }
 
+    async getTokenByToken(token: string) {
+        return await this.jwtService.findOne({
+            where:{refreshToken: token}
+        })
+    }
+
     async deleteRefreshToken(refreshToken: string) {
         const token = await this.jwtService.findOne({
             where: {

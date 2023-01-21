@@ -67,7 +67,8 @@ export class LadyService {
             where: {
                 ladyId: id,
                 username
-            }
+            },
+            relations: ['ladyAbout']
         })
 
         if(!lady) return new ApiResponse('error', 'User is not found', -2002);
@@ -143,7 +144,10 @@ export class LadyService {
     }
 
     async getAll():Promise<Lady[]> {
-        return await this.ladyService.find();
+        return await this.ladyService.find({
+            relations: ['ladyAbout'],
+            take: 50
+        });
     }
 
     async ladyReport():Promise<ReportDto> {

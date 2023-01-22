@@ -42,4 +42,10 @@ export class ProducesService{
         if(!produce) return new ApiResponse('error', "The produce is not found!", -50001);
         return await this.producesService.delete(produce);
     }
+
+    async getById(id: number):Promise<ApiResponse | Produces> {
+        const produce = await this.producesService.findOne({where:{produceId: id}});
+        if(!produce) return new ApiResponse('error', 'The produce is not found!', -50001);
+        return produce;
+    }
 }

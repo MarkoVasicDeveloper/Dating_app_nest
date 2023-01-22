@@ -5,8 +5,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { LadyAbout } from "./LadyAbout";
 import { PhotosLady } from "./PhotosLady";
+import { LadyAbout } from "./LadyAbout";
 
 @Index("username", ["username"], { unique: true })
 @Index("email", ["email"], { unique: true })
@@ -55,9 +55,9 @@ export class Lady {
   @Column("enum", { name: "verified", enum: ["0", "1"], default: () => "'0'" })
   verified: "0" | "1";
 
-  @OneToMany(() => LadyAbout, (ladyAbout) => ladyAbout.lady)
-  ladyAbouts: LadyAbout[];
-
   @OneToMany(() => PhotosLady, (photosLady) => photosLady.lady)
   photosLadies: PhotosLady[];
+
+  @OneToMany(() => LadyAbout, (ladyAbout) => ladyAbout.lady)
+  ladyAbouts: LadyAbout[];
 }

@@ -12,10 +12,12 @@ import { JwtService } from "../jwt/jwt.service";
 import { BlockTheUserDto } from "src/dto/gentleman/block.the.user.dto";
 import { fillObject } from "src/misc/fill.object";
 import { ReportDto } from "src/dto/report/report.dto";
+import { LadiesWishesService } from "../ladies_wishies/ladies.wishes.service";
 
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
-                private readonly jwtService: JwtService) {}
+                private readonly jwtService: JwtService,
+                private readonly ladiesWishesService: LadiesWishesService) {}
 
     async addLady(data: AddLadyDto) : Promise <Lady | ApiResponse> {
         try {
@@ -33,6 +35,8 @@ export class LadyService {
 
             fs.mkdirSync(`../Storage/Photo/Lady/${data.username}`, { recursive: true });
 
+            await this.ladiesWishesService.addLadiesWishes(savedLady.ladyId);
+            
             return savedLady;
 
         } catch (error) {

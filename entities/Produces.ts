@@ -7,8 +7,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Partners } from "./Partners";
 import { PartnersPhoto } from "./PartnersPhoto";
+import { Partners } from "./Partners";
 
 @Index("FK_produces_partners", ["partnerId"], {})
 @Entity("produces", { schema: "dating_app" })
@@ -25,13 +25,13 @@ export class Produces {
   @Column("int", { name: "price", default: () => "'0'" })
   price: number;
 
+  @OneToMany(() => PartnersPhoto, (partnersPhoto) => partnersPhoto.produce)
+  partnersPhotos: PartnersPhoto[];
+
   @ManyToOne(() => Partners, (partners) => partners.produces, {
     onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "partner_id", referencedColumnName: "partnerId" }])
   partner: Partners;
-
-  @OneToMany(() => PartnersPhoto, (partnersPhoto) => partnersPhoto.produce)
-  partnersPhotos: PartnersPhoto[];
 }

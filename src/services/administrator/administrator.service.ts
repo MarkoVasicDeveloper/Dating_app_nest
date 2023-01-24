@@ -77,6 +77,10 @@ export class AdministratorService{
         return await this.adminService.save(admin);
     }
 
+    async getAllAdministrator():Promise<Administrator[]> {
+        return await this.adminService.find()
+    }
+
     async deleteAdmin(data: DeleteAdminDto):Promise<ApiResponse | DeleteResult> {
         const checkAdmin = await this.adminService.findOne({
             where: {

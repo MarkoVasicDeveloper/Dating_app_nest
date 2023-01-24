@@ -11,6 +11,8 @@ async function bootstrap() {
   app.useStaticAssets(photoConfig.destination, {
     prefix: photoConfig.prefix
   })
+  app.set('view engine', 'ejs');
+  app.useStaticAssets('public')
   await app.listen(3000);
 }
 bootstrap();

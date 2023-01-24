@@ -42,6 +42,18 @@ export class OrderService{
         return savedOrder;
     }
 
+    async getOrder(username: string, email: string, orderId: number):Promise<Order | ApiResponse>{
+        const order = await this.orderService.findOne({
+            where:{
+                orderId,
+                customerEmail: email,
+                customerUsername: username
+            }
+        })
+        if(!order) return new ApiResponse('error', 'The order is not found!', -60001);
+        return order;
+    }
+
     async deleteOrder(orderId: number, customerId: number):Promise<DeleteResult | ApiResponse> {
         const order = await this.orderService.findOne({where:{orderId}});
         if(!order) return new ApiResponse('error', 'The order is not found!', -60001);

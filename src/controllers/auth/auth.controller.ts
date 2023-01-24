@@ -15,13 +15,18 @@ import { Lady } from "entities/Lady";
 import { Gentleman } from "entities/Gentleman";
 import { LoginInfo } from "src/misc/loginInfo";
 import { AdministratorService } from "src/services/administrator/administrator.service";
+import { UserLogService } from "src/services/user_log/user.log.service";
+import { UserLog } from "entities/UserLog";
+import { fillObject } from "src/misc/fill.object";
+import { AddUserLogDto } from "src/dto/user_log/user.log.dto";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly gentlemanService: GentlemanService,
                 private readonly ladyService: LadyService,
                 private readonly refreshService: JwtService,
-                private readonly adminService: AdministratorService) {}
+                private readonly adminService: AdministratorService,
+                private readonly userLogService: UserLogService) {}
 
     @Post('login')
     async login (@Body() data: LoginDto, @Req() req: Request): Promise<ApiResponse | LoginInfo> {
@@ -31,8 +36,7 @@ export class AuthController {
         }else{
             service = data.lady ? this.ladyService : this.gentlemanService;
         }
-        console.log(req.socket.remoteAddress);
-        console.log(req.headers['x-forwarded-for'])
+
         const user = await service.getByUsername(data.username);
 
         if(!user) return new ApiResponse('error', 'Wrong username or password', 3001);
@@ -44,6 +48,22 @@ export class AuthController {
         const passwordHashString = passwordHash.digest('hex').toString().toUpperCase();
 
         if(user.password !== passwordHashString) return new ApiResponse('error', 'Wrong username or password', 3001);
+
+        const ip = req.socket?.remoteAddress || null;
+        const userAgent = req.headers['user-agent']
+        
+        const userLog = await this.userLogService.getUserLog(user.username, user.email);
+        if(userLog instanceof ApiResponse) {
+            const newUserLog = new AddUserLogDto();
+            newUserLog.email = user.email;
+            newUserLog.username = user.username;
+            newUserLog.ipAddress = ip;
+            newUserLog.userAgent = userAgent;
+
+            await this.userLogService.addUserLog(newUserLog);
+        }else{
+            await this.userLogService.editUserLog(userLog, ip, userAgent);
+        }
         
         const jwtData = new JwtDataDto();
         jwtData.role = user instanceof Lady ? 'lady' : user instanceof Gentleman ? user.privileges : 'administrator';

@@ -11,9 +11,9 @@ export class UserLog {
   @Column("varchar", { name: "email", length: 50 })
   email: string;
 
-  @Column("json", { name: "ip_addresses" })
-  ipAddresses: object;
+  @Column("json", { name: "ip_addresses", nullable: true })
+  ipAddresses: object | null;
 
-  @Column("json", { name: "user_agent" })
-  userAgent: object;
+  @Column("json", { name: "user_agent", nullable: true })
+  userAgent: object | null;
 }

@@ -58,6 +58,8 @@ import { LadiesWishesService } from './services/ladies_wishies/ladies.wishes.ser
 import { RequestToAdminService } from './services/request_to_admin/request.to.admin';
 import { RequestToAdministratorController } from './controllers/request_to_admin/request.to.admin.controller';
 import { RequestToAdministrator } from 'entities/RequestToAdministrator';
+import { UserLog } from 'entities/UserLog';
+import { UserLogService } from './services/user_log/user.log.service';
 
 @Module({
   imports: [
@@ -68,12 +70,12 @@ import { RequestToAdministrator } from 'entities/RequestToAdministrator';
       username: 'root',
       password: 'root',
       database: 'dating_app',
-      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator]
+      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog]
     }),
-    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator])
+    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog])
   ],
   controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController, PasswordResetController, GiftController, PartnersController, ProducePhotoController, ProducesController, OrderController, LadiesWishesController, RequestToAdministratorController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService, PartnersService, ProducePhotoService, ProducesService, OrderService, LadiesWishesService, RequestToAdminService],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService, PartnersService, ProducePhotoService, ProducesService, OrderService, LadiesWishesService, RequestToAdminService, UserLogService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

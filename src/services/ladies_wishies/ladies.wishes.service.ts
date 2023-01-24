@@ -5,6 +5,7 @@ import { EditLadiesWishisDto } from 'src/dto/ladies_wishes/edit.ladies.wisshes.d
 import { ApiResponse } from 'src/misc/api.response';
 import { fillObject } from 'src/misc/fill.object';
 import { Repository } from 'typeorm';
+import * as fs from 'fs';
 
 @Injectable()
 export class LadiesWishesService {
@@ -37,5 +38,18 @@ export class LadiesWishesService {
         const wishes = await this.ladiesWishesService.findOne({where:{ladyId}});
         if(!wishes) return new ApiResponse('error', 'The wishes is not found', -70002);
         return wishes;
+    }
+
+    async setWishesQuestion(question: string[]):Promise<ApiResponse> {
+        const questionArray = [];
+        question.forEach((ques: string) =>  questionArray.push(ques))
+        const json = JSON.stringify(questionArray);
+
+        try {
+            fs.writeFileSync('../Storage/Files/ladiesWishesQuestion.json', json);
+            return new ApiResponse('ok', 'The file is saved!', 100000);
+        } catch (error) {
+            return new ApiResponse('error', 'The file is not saved!', -100001);
+        }
     }
 }

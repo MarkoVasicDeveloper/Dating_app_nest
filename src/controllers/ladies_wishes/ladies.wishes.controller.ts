@@ -1,4 +1,5 @@
 import { Controller, Body, Post, UseGuards, Put, Param } from '@nestjs/common';
+import { Patch } from '@nestjs/common/decorators';
 import { LadiesWishes } from 'entities/LadiesWishes';
 import { EditLadiesWishisDto } from 'src/dto/ladies_wishes/edit.ladies.wisshes.dto';
 import { AllowToRole } from 'src/misc/allow.to.role.descriptor';
@@ -22,5 +23,12 @@ export class LadiesWishesController{
     @AllowToRole('administrator')
     async getWishes(@Param('ladyId') ladyId: number):Promise<LadiesWishes | ApiResponse> {
         return await this.ladiesWishesService.getWishesByLadyId(ladyId);
+    }
+
+    @Patch('wishesQuestions')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator')
+    async setWishesQuestion(@Body() data: []) {
+        return await this.ladiesWishesService.setWishesQuestion(data);
     }
 }

@@ -4,11 +4,13 @@ import { google } from 'googleapis';
 import { mailerConfig } from 'config/mailer';
 import { GentlemanService } from '../gentleman/gentleman.service';
 import { LadyService } from '../lady/lady.service';
+import { AdministratorService } from '../administrator/administrator.service';
 
 @Injectable()
 export default class MailerService {
   constructor(private readonly gentlemanService: GentlemanService,
-              private readonly ladyService: LadyService) {}
+              private readonly ladyService: LadyService,
+              private readonly adminService: AdministratorService) {}
   async sendEmail(email: string, body: string) {
     const Oauth2 = new google.auth.OAuth2(
         mailerConfig.client_id,
@@ -56,16 +58,23 @@ export default class MailerService {
   }
 
   async sendMailToAllGentleman(data: {body: string}) {
-    const allGentleman = await this.gentlemanService.getAll();
+    const allGentleman = await this.gentlemanService.getAllForMail();
     allGentleman.forEach(async gentleman => {
       await this.sendEmail(gentleman.email, data.body)
     })
   }
 
   async sendMailToAllLady(data: {body: string}) {
-    const allLady = await this.ladyService.getAll();
+    const allLady = await this.ladyService.getAllForMail();
     allLady.forEach(async lady => {
       await this.sendEmail(lady.email, data.body)
+    })
+  }
+
+  async sendMailToAllAdmin(data: {body: string}) {
+    const allAdmin = await this.adminService.getAllAdministrator();
+    allAdmin.forEach(async admin => {
+      await this.sendEmail(admin.email, data.body);
     })
   }
 }

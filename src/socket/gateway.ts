@@ -1,6 +1,7 @@
 import { OnModuleInit } from "@nestjs/common";
 import { OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { SubscribeMessage, WebSocketServer } from "@nestjs/websockets/decorators";
+import { Gentleman } from "entities/Gentleman";
 import { Lady } from "entities/Lady";
 import { Message } from "entities/Message";
 import { Server, Socket } from 'socket.io';
@@ -121,10 +122,16 @@ export class Gateway implements OnModuleInit, OnGatewayDisconnect{
         const user = await service.getByIdAndUsename(data.id, data.username);
         if(user instanceof ApiResponse) return socket.emit('error', 'User is not found!');
 
+        if(user instanceof Gentleman && user.privileges === 'gentleman' && user.numberOfMessage === 5){
+            return socket.emit('error', 'You cannot send more then 5 message per day!');
+        }
+
         const conversation = user.conversations as any;
 
         if(conversation !== null && conversation.some((userObject: {id: number, username: string}) => userObject.id === data.connectonId && userObject.username === data.connectionUsername)) {
-            
+            if(user instanceof Gentleman && user.privileges === 'gentleman'){
+                user.numberOfMessage = user.numberOfMessage ? user.numberOfMessage + 1 : user.numberOfMessage = 1;
+            }
             const userIsOnline = online.find(object => object.username === data.connectionUsername);
             
             let messageTable = await this.messageService.findMessage(data.lady ? data.connectonId : data.id,data.lady ? data.id : data.connectonId);

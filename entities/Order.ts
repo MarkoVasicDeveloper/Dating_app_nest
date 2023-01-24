@@ -40,4 +40,7 @@ export class Order {
     default: () => "'on_hold'",
   })
   status: "on_hold" | "approved" | "realized";
+
+  @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
+  created: Date;
 }

@@ -72,6 +72,12 @@ export class Gentleman {
   @Column("enum", { name: "verified", enum: ["0", "1"], default: () => "'0'" })
   verified: "0" | "1";
 
+  @Column("int", { name: "number_of_message", nullable: true })
+  numberOfMessage: number | null;
+
+  @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
+  created: Date;
+
   @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
   gentlemanAbouts: GentlemanAbout[];
 

@@ -153,6 +153,10 @@ export class GentlemanService {
     });
   }
 
+  async getAllForMail():Promise<Gentleman[]>{
+    return await this.gentlemanService.find();
+  }
+
   async getByPrivileges(privileges: 'gentleman' | 'gentlemanPremium' | 'gentlemanVip', page: number | null = 1) {
     return await this.gentlemanService.find({where:{privileges}, take: 50 * page})
   }

@@ -51,11 +51,11 @@ export class LadyContoller {
         return await this.ladyService.getByEmail(email);
     }
 
-    @Get('get/allLady/:page')
+    @Get('get/allLady/:page/:id')
     @UseGuards(RoleCheckerGard)
     @AllowToRole('gentleman', 'gentlemanPremium', 'gentlemanVip', 'administrator')
-    async getAllLady(@Param('page') page: number):Promise<Lady[]>{
-        return await this.ladyService.getAll(page);
+    async getAllLady(@Param('page') page: number, @Param('id') id: number):Promise<Lady[]>{
+        return await this.ladyService.getAll(page, id);
     }
 
     @Delete('delete/lady')

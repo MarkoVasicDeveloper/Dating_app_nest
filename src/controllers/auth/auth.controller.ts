@@ -31,7 +31,8 @@ export class AuthController {
         }else{
             service = data.lady ? this.ladyService : this.gentlemanService;
         }
-        
+        console.log(req.socket.remoteAddress);
+        console.log(req.headers['x-forwarded-for'])
         const user = await service.getByUsername(data.username);
 
         if(!user) return new ApiResponse('error', 'Wrong username or password', 3001);

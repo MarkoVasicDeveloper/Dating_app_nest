@@ -26,6 +26,9 @@ export class Partners {
   @Column("varchar", { name: "description", length: 255 })
   description: string;
 
+  @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
+  created: Date;
+
   @ManyToOne(() => GiftCategory, (giftCategory) => giftCategory.partners, {
     onDelete: "CASCADE",
     onUpdate: "NO ACTION",

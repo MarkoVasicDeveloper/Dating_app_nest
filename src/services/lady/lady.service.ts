@@ -13,11 +13,14 @@ import { BlockTheUserDto } from "src/dto/gentleman/block.the.user.dto";
 import { fillObject } from "src/misc/fill.object";
 import { ReportDto } from "src/dto/report/report.dto";
 import { LadiesWishesService } from "../ladies_wishies/ladies.wishes.service";
+import { GentlemanService } from "../gentleman/gentleman.service";
+import { Gentleman } from "entities/Gentleman";
 
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
                 private readonly jwtService: JwtService,
-                private readonly ladiesWishesService: LadiesWishesService) {}
+                private readonly ladiesWishesService: LadiesWishesService,
+                private readonly gentlemanService: GentlemanService) {}
 
     async addLady(data: AddLadyDto) : Promise <Lady | ApiResponse> {
         try {
@@ -147,11 +150,21 @@ export class LadyService {
         return new ApiResponse('ok', 'The user has been blocked!', 200);
     }
 
-    async getAll(page: number | null = 1):Promise<Lady[]> {
-        return await this.ladyService.find({
+    async getAll(page: number | null = 1, id: number):Promise<Lady[]> {
+        const gentleman = await this.gentlemanService.getById(id);
+        const allLady = await this.ladyService.find({
             relations: ['ladyAbouts'],
             take: 50 * page
         });
+
+        if(gentleman instanceof Gentleman && gentleman.privileges === 'gentleman') {
+            return allLady.slice(0,3);
+        }
+        return allLady;
+    }
+
+    async getAllForMail():Promise<Lady[]> {
+        return await this.ladyService.find()
     }
 
     async ladyReport():Promise<ReportDto> {

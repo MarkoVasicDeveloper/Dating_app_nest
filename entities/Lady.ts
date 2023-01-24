@@ -56,6 +56,9 @@ export class Lady {
   @Column("enum", { name: "verified", enum: ["0", "1"], default: () => "'0'" })
   verified: "0" | "1";
 
+  @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
+  created: Date;
+
   @OneToMany(() => LadiesWishes, (ladiesWishes) => ladiesWishes.lady)
   ladiesWishes: LadiesWishes[];
 

@@ -182,4 +182,11 @@ export class LadyService {
         report.allPrivileges = null
         return report;
     }
+
+    async search(query: string):Promise<Lady[]> {
+        const builder = this.ladyService.createQueryBuilder('lady');
+        builder.where('(lady.username LIKE :kw OR lady.city LIKE :kw)', { kw: '%' + query + '%'});
+
+        return await builder.getMany();
+    }
 }

@@ -15,6 +15,7 @@ export class ProducesService{
         produce.partnerId = data.partnerId;
         produce.price = data.price;
         produce.title = data.title;
+        produce.description = data.description;
 
         const savedProduce = await this.producesService.save(produce);
         if(!savedProduce) return new ApiResponse('error', 'The produce is not saved!', -50001);
@@ -26,6 +27,7 @@ export class ProducesService{
         if(!produce) return new ApiResponse('error', "The produce is not found!", -50001);
         if(data.price) produce.price = data.price;
         if(data.title) produce.title = data.title;
+        if(data.description) produce.description = data.description;
 
         const savedProduce = await this.producesService.save(produce);
         if(!savedProduce) return new ApiResponse('error', 'The produce is not saved!', -50001);
@@ -47,5 +49,12 @@ export class ProducesService{
         const produce = await this.producesService.findOne({where:{produceId: id}});
         if(!produce) return new ApiResponse('error', 'The produce is not found!', -50001);
         return produce;
+    }
+
+    async search(query: string):Promise<Produces[]> {
+        const builder = this.producesService.createQueryBuilder('produce');
+        builder.where('(produce.title LIKE :kw OR produce.price LIKE :kw OR produce.description LIKE :kw)', { kw: '%' + query + '%'});
+
+        return await builder.getMany();
     }
 }

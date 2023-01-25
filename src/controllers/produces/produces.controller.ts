@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Delete, Param, Body, Get } from '@nestjs/common';
 import { Produces } from 'entities/Produces';
 import { AddProducesDto } from 'src/dto/produces/add.produces.dto';
 import { EditProducesDto } from 'src/dto/produces/edit.produce.dto';
@@ -31,5 +31,12 @@ export class ProducesController{
     @AllowToRole('administrator')
     async deleteProduce(@Param('produceId') produceId: number, @Param('partnerId') partnerId: number):Promise<DeleteResult | ApiResponse> {
         return await this.producesService.deleteProduce(produceId, partnerId);
+    }
+
+    @Get('search/produce/:query')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator','gentlemanPremium','gentlemanVip','gentleman','lady')
+    async searchProduce(@Param('query') query: string):Promise<Produces[]>{
+        return await this.producesService.search(query);
     }
 }

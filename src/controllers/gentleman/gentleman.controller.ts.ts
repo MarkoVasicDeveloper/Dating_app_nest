@@ -81,4 +81,11 @@ export class GentlemanController {
   async getAllByPrivileges(@Param('page') page: number, @Param('privileges') privileges: 'gentleman' | 'gentlemanPremium' | 'gentlemanVip'):Promise<Gentleman[]> {
     return await this.gentlemanService.getByPrivileges(privileges, page);
   }
+
+  @Get('search/gentleman/:query')
+  @UseGuards(RoleCheckerGard)
+  @AllowToRole('administrator','lady')
+  async searchGentleman(@Param('query') query: string):Promise<Gentleman[]>{
+    return await this.gentlemanService.search(query);
+  }
 }

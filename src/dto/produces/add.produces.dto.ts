@@ -15,4 +15,9 @@ export class AddProducesDto{
     @validator.IsNumber()
     @validator.IsPositive()
     price: number
+
+    @validator.IsNotEmpty()
+    @validator.IsString()
+    @validator.Length(5, 255)
+    description: string
 }

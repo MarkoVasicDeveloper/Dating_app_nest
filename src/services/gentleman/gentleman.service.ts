@@ -193,4 +193,11 @@ export class GentlemanService {
     }
     return report;
   }
+
+  async search(query: string):Promise<Gentleman[]> {
+    const builder = this.gentlemanService.createQueryBuilder('gentleman');
+    builder.where('(gentleman.username LIKE :kw OR gentleman.city LIKE :kw OR gentleman.privileges LIKE :kw)', { kw: '%' + query + '%'});
+
+    return await builder.getMany();
+  }
 }

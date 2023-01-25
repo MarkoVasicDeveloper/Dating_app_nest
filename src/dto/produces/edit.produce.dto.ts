@@ -14,6 +14,12 @@ export class EditProducesDto{
 
     @validator.IsOptional()
     @validator.IsNotEmpty()
-    @validator.IsString()
+    @validator.IsNumber()
     price?: number
+
+    @validator.IsOptional()
+    @validator.IsNotEmpty()
+    @validator.IsString()
+    @validator.Length(3, 255)
+    description?: string
 }

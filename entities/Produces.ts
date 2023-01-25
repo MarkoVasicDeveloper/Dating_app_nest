@@ -25,6 +25,9 @@ export class Produces {
   @Column("int", { name: "price", default: () => "'0'" })
   price: number;
 
+  @Column("varchar", { name: "description", length: 50 })
+  description: string;
+
   @OneToMany(() => PartnersPhoto, (partnersPhoto) => partnersPhoto.produce)
   partnersPhotos: PartnersPhoto[];
 

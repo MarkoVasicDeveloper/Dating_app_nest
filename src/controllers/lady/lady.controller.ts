@@ -71,4 +71,11 @@ export class LadyContoller {
     async blockTheUser(@Body() data: BlockTheUserDto):Promise<ApiResponse> {
     return await this.ladyService.blockTheLady(data);
     }
+
+    @Get('search/lady/:query')
+    @UseGuards(RoleCheckerGard)
+    @AllowToRole('administrator','gentlemanPremium','gentlemanVip')
+    async searchLady(@Param('query') query: string):Promise<Lady[]>{
+        return await this.ladyService.search(query);
+    }
 }

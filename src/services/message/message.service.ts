@@ -6,6 +6,7 @@ import { ApiResponse } from "src/misc/api.response";
 import { fillObject } from "src/misc/fill.object";
 import { IsNull, Not, Repository } from "typeorm";
 import { ChangeUnreadedMessageDto } from "src/dto/messages/change.unreaded.message.dto";
+import { unreadedMessageCronJob } from "../cron_jobs/cron.jobs.service";
 
 export class MessagesService {
     constructor(@InjectRepository(Message) private readonly messagesServices: Repository<Message>) {}
@@ -53,6 +54,7 @@ export class MessagesService {
         
         const savedMessage = await this.messagesServices.save(messages);
         if(!savedMessage) return new ApiResponse('error', 'Message is not saved!', -13001);
+
         return savedMessage;
     }
 
@@ -68,6 +70,12 @@ export class MessagesService {
 
         const savedMessage = await this.messagesServices.save(messages);
         if(!savedMessage) return new ApiResponse('error', 'Message is not saved!', -13001);
+        unreadedMessageCronJob[`${messages.messageId}`] = {
+            'lady': data.lady,
+            'sender': data.lady ? messages.gentlemanId : messages.ladyId,
+            'recipient' : data.lady ? messages.ladyId : messages.gentlemanId,
+            'unreadedMessage' : data.message
+        }
         return savedMessage;
     }
 

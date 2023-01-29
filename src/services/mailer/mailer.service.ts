@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { google } from 'googleapis';
-import { mailerConfig } from 'config/mailer';
+import { emailTemplateAttachments, mailerConfig } from 'config/mailer';
 import { GentlemanService } from '../gentleman/gentleman.service';
 import { LadyService } from '../lady/lady.service';
 import { AdministratorService } from '../administrator/administrator.service';
+import * as hbs from 'nodemailer-express-handlebars';
 
 @Injectable()
-export default class MailerService {
+export class MailerService {
   constructor(private readonly gentlemanService: GentlemanService,
               private readonly ladyService: LadyService,
               private readonly adminService: AdministratorService) {}
-  async sendEmail(email: string, body: string) {
+  async sendEmail(email: string, template: string, attachments: {filename: string, path: string, cid: string | null}[] | null = null, name: string | null = null, ip: string | null = null, userAgent: string | null = null, senderName: string | null = null, numberOfMessages: number | null = null) {
     const Oauth2 = new google.auth.OAuth2(
         mailerConfig.client_id,
         mailerConfig.client_secret,
@@ -37,44 +38,68 @@ export default class MailerService {
         tls: { rejectUnauthorized: false },
       });
 
+
+      transtort.use('compile', hbs({
+        viewEngine: {
+          extname: '.handlebars',
+          partialsDir: './views',
+          defaultLayout: false
+        },
+        viewPath: './views/',
+        extName: '.handlebars'
+      }))
+
       const mailerOptions = {
         from: mailerConfig.sender,
         to: email,
         subject: 'Dzentlmen i Dama <dzentlmenidamaapp@google.com>',
         encoding: 'UTF-8',
-        html: body,
+        template: template,
+        attachments,
+        context: {
+          name,
+          ip,
+          userAgent,
+          senderName,
+          numberOfMessages
+        }
       };
 
       return await transtort.sendMail(mailerOptions);
     } catch (error) {
+      console.log(error)
       return error;
     }
   }
 
-  async emailMarketing(data: {email:string, body: string}[]) {
-    data.forEach(async (object:any) => {
-      await this.sendEmail(object.email, object.body);
+  async sendVerificationLink(email: string, name: string, template: string ) {
+    await this.sendEmail(email, template, emailTemplateAttachments[template], name);
+  }
+
+  async sendMultipleMail(template: string, users: string[]) {
+    users.forEach(async (user: string) => {
+      await this.sendEmail(user, template);
     })
   }
 
-  async sendMailToAllGentleman(data: {body: string}) {
+  async sendMailToAllGentleman(template: string) {
     const allGentleman = await this.gentlemanService.getAllForMail();
     allGentleman.forEach(async gentleman => {
-      await this.sendEmail(gentleman.email, data.body)
+      await this.sendEmail(gentleman.email, template, emailTemplateAttachments[template], gentleman.username)
     })
   }
 
-  async sendMailToAllLady(data: {body: string}) {
+  async sendMailToAllLady(template: string) {
     const allLady = await this.ladyService.getAllForMail();
     allLady.forEach(async lady => {
-      await this.sendEmail(lady.email, data.body)
+      await this.sendEmail(lady.email, template, emailTemplateAttachments[template], lady.username)
     })
   }
 
-  async sendMailToAllAdmin(data: {body: string}) {
+  async sendMailToAllAdmin(template: string) {
     const allAdmin = await this.adminService.getAllAdministrator();
     allAdmin.forEach(async admin => {
-      await this.sendEmail(admin.email, data.body);
+      await this.sendEmail(admin.email, template, emailTemplateAttachments[template]);
     })
   }
 }

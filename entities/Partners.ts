@@ -10,8 +10,8 @@ import {
 import { GiftCategory } from "./GiftCategory";
 import { Produces } from "./Produces";
 
-@Index("FK__gift_category", ["giftCategoryId"], {})
 @Index("name", ["name"], { unique: true })
+@Index("FK__gift_category", ["giftCategoryId"], {})
 @Entity("partners", { schema: "dating_app" })
 export class Partners {
   @PrimaryGeneratedColumn({ type: "int", name: "partner_id", unsigned: true })

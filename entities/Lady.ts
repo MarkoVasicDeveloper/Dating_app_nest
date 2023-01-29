@@ -9,8 +9,8 @@ import { LadiesWishes } from "./LadiesWishes";
 import { LadyAbout } from "./LadyAbout";
 import { PhotosLady } from "./PhotosLady";
 
-@Index("email", ["email"], { unique: true })
 @Index("username", ["username"], { unique: true })
+@Index("email", ["email"], { unique: true })
 @Entity("lady", { schema: "dating_app" })
 export class Lady {
   @PrimaryGeneratedColumn({ type: "int", name: "lady_id", unsigned: true })

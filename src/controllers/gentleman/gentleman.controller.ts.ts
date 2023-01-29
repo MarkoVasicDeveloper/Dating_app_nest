@@ -8,8 +8,7 @@ import { EditGentlemanDto } from 'src/dto/gentleman/edit.gentleman.dto';
 import { AllowToRole } from 'src/misc/allow.to.role.descriptor';
 import { ApiResponse } from 'src/misc/api.response';
 import { RoleCheckerGard } from 'src/roleCheckerGard/role.checker.gard';
-import MailerService from 'src/services/mailer/mailer.service';
-import { DeleteResult } from 'typeorm';
+import {MailerService} from 'src/services/mailer/mailer.service';
 import { GentlemanService } from '../../services/gentleman/gentleman.service';
 
 @Controller('api')
@@ -20,7 +19,7 @@ export class GentlemanController {
   @Post('add/gentleman')
   async addGentleman(@Body() data: AddGentlemanDto): Promise <Gentleman | ApiResponse> {
     const result = await this.gentlemanService.addGenleman(data);
-    if(result instanceof Gentleman) await this.mailerService.sendEmail(result.email, 'hello')
+    if(result instanceof Gentleman) await this.mailerService.sendVerificationLink(result.email, result.username, 'defaultVerificationMail');
     return result;
   }
 
@@ -29,7 +28,7 @@ export class GentlemanController {
   @AllowToRole('gentleman', 'gentlemanPremium', 'gentlemanVip', 'administrator')
   async editGentleman(@Body() data: EditGentlemanDto): Promise <Gentleman | ApiResponse> {
     const result = await this.gentlemanService.editGentleman(data);
-    if(result instanceof Gentleman) await this.mailerService.sendEmail(result.email, 'hello')
+    if(result instanceof Gentleman && data.editEmail) await this.mailerService.sendVerificationLink(result.email, result.username, 'defaultEditVerificationMail');
     return result;
   }
 

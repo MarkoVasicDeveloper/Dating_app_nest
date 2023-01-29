@@ -73,6 +73,7 @@ export class AdministratorService{
         if(data.editPassword) admin.password = passwordHash(data.editPassword);
 
         if(data.editUsername) admin.username = data.editUsername;
+        if(data.editEmail) admin.email = data.editEmail;
 
         return await this.adminService.save(admin);
     }

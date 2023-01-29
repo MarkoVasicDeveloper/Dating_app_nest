@@ -6,7 +6,7 @@ import { passwordHash } from "src/misc/password.hash";
 import { GentlemanService } from "../gentleman/gentleman.service";
 import { JwtService } from "../jwt/jwt.service";
 import { LadyService } from "../lady/lady.service";
-import MailerService from "../mailer/mailer.service";
+import {MailerService} from "../mailer/mailer.service";
 
 @Injectable()
 export class PasswordResetService{

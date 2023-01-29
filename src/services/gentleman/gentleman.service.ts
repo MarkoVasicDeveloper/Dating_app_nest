@@ -107,7 +107,7 @@ export class GentlemanService {
 
     if(data.editPassword) user.password = passwordHash(data.editPassword);
     if(data.editUsername) user.username = data.editUsername;
-    if(data.editeEmail) user.email = data.editeEmail;
+    if(data.editEmail) user.email = data.editEmail;
     if(data.editCity) user.city = data.editCity;
     if(data.editState) user.state = data.editState;
     if(data.editDateOfBirth) user.dateOfBirth = data.editDateOfBirth;

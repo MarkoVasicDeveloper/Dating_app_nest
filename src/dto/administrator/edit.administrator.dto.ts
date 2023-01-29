@@ -24,4 +24,9 @@ export class EditAdministratorDto{
     @validator.IsString()
     @validator.Length(6, 50)
     editPassword?: string
+
+    @validator.IsOptional()
+    @validator.IsNotEmpty()
+    @validator.IsEmail()
+    editEmail?: string
 }

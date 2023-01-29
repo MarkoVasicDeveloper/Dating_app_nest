@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Get, Param } from "@nestjs/common";
 import { LoginDto } from "src/dto/login/login.dto";
 import { GentlemanService } from "src/services/gentleman/gentleman.service";
 import { LadyService } from "src/services/lady/lady.service";
@@ -68,7 +68,7 @@ export class AuthController {
         const jwtData = new JwtDataDto();
         jwtData.role = user instanceof Lady ? 'lady' : user instanceof Gentleman ? user.privileges : 'administrator';
         jwtData.id = user instanceof Lady ? user.ladyId : user instanceof Gentleman ? user.gentlemanId : user.administratorId;
-        jwtData.ipAddress = req.ip;
+        jwtData.ipAddress = ip;
         jwtData.expire = this.getDatePlus(60 * 5);
         jwtData.username = user.username;
         
@@ -87,8 +87,6 @@ export class AuthController {
                     jwtData.id,
                     jwtData.username,
                     token,
-                    refToken.refreshToken,
-                    refToken.expire,
                     jwtData.role
                 )
             }
@@ -109,11 +107,50 @@ export class AuthController {
             jwtData.id,
             jwtData.username,
             token,
-            refreshToken,
-            this.getIsoFormat(jwtRefreshData.expire),
             jwtData.role
         )
     }
+
+    @Get('refresh/:token')
+    async refresh(@Param('token') token: string) {
+        let tokenObject: JwtDataDto;
+        try {
+            tokenObject = jwt.verify(token, secret) as any;
+        } catch (error) {
+            return new ApiResponse('error', 'Bad token found!', -401);
+        };
+
+        const refreshToken = await this.refreshService.getTokenByUsername(tokenObject.username);
+        if(!refreshToken) return new ApiResponse('error', 'You must to log in again!', -8900);
+
+        let refreshTokenObject: JwtRefreshDataDto;
+        
+        try {
+            refreshTokenObject = jwt.verify(refreshToken.refreshToken, secret) as any;
+        } catch (error) {
+            return new ApiResponse('error', 'Someting is wrong!', -401);
+        }
+
+        const currentTime = new Date().getTime();
+        const date = new Date(refreshToken.expire);
+        const milliseconds = date.getTime();
+        
+        if(currentTime > milliseconds) return new ApiResponse('error', 'The refresh token has expired! You must log in again', -401);
+
+        if(refreshTokenObject.username !== tokenObject.username && refreshTokenObject.role !== tokenObject.role) return new ApiResponse('error', 'You must to log in again!', -401);
+
+        tokenObject.expire = this.getDatePlus(60 * 5);
+
+        const newToken = jwt.sign(tokenObject, secret);
+
+        return new LoginInfo(
+            tokenObject.id,
+            tokenObject.username,
+            newToken,
+            tokenObject.role
+        )
+    }
+
 
     private getDatePlus(numberOfSeconds: number) {
         return new Date().getTime() / 1000 + numberOfSeconds;

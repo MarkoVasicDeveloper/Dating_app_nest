@@ -12,7 +12,7 @@ export class EditGentlemanDto{
     @validator.IsOptional()
     @validator.IsNotEmpty()
     @validator.IsEmail()
-    editeEmail?: string
+    editEmail?: string
 
     @validator.IsOptional()
     @validator.IsString()

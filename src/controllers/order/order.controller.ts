@@ -11,7 +11,7 @@ import { DeleteResult } from "typeorm";
 import * as paypal from '@paypal/checkout-server-sdk';
 import { ProducesService } from "src/services/produces/produces.service";
 import { GentlemanService } from "src/services/gentleman/gentleman.service";
-import MailerService from "src/services/mailer/mailer.service";
+import {MailerService} from "src/services/mailer/mailer.service";
 import { AdministratorService } from "src/services/administrator/administrator.service";
 import { Administrator } from "entities/Administrator";
 

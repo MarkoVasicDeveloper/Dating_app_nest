@@ -9,7 +9,7 @@ import { DeleteResult, Repository } from "typeorm";
 import { AdministratorService } from "../administrator/administrator.service";
 import { GentlemanService } from "../gentleman/gentleman.service";
 import { LadyService } from "../lady/lady.service";
-import MailerService from "../mailer/mailer.service";
+import {MailerService} from "../mailer/mailer.service";
 
 @Injectable()
 export class RequestToAdminService{
@@ -43,7 +43,7 @@ export class RequestToAdminService{
 
         const savedRequest = await this.requestService.save(request);
         if(!savedRequest) return new ApiResponse('error', 'The request is not saved!', -80002);
-        this.mailerService.sendMailToAllAdmin({body: ''});
+        this.mailerService.sendMailToAllAdmin('');
         return new ApiResponse('ok', 'Your request has been forwarded to an administrator. He will answer you as soon as possible.', 1000);
     }
 

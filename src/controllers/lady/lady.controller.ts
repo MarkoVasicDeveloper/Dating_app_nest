@@ -8,7 +8,7 @@ import { AllowToRole } from "src/misc/allow.to.role.descriptor";
 import { ApiResponse } from "src/misc/api.response";
 import { RoleCheckerGard } from "src/roleCheckerGard/role.checker.gard";
 import { LadyService } from "src/services/lady/lady.service";
-import MailerService from "src/services/mailer/mailer.service";
+import {MailerService} from "src/services/mailer/mailer.service";
 import { DeleteResult } from "typeorm";
 
 @Controller('api')
@@ -19,7 +19,7 @@ export class LadyContoller {
     @Post('add/lady')
     async addLady (@Body() data: AddLadyDto): Promise <Lady | ApiResponse> {
         const result = await this.ladyService.addLady(data);
-        if(result instanceof Lady) await this.mailerService.sendEmail(result.email, 'hello');
+        if(result instanceof Lady) await this.mailerService.sendVerificationLink(result.email, result.username, 'defaultVerificationMail');
         return result;
     }
 
@@ -27,7 +27,9 @@ export class LadyContoller {
     @UseGuards(RoleCheckerGard)
     @AllowToRole('lady', 'administrator')
     async editLady(@Body() data: EditLadyDto):Promise<Lady | ApiResponse>{
-        return await this.ladyService.editLady(data);
+        const result = await this.ladyService.editLady(data);
+        if(result instanceof Lady && data.editEmail) await this.mailerService.sendVerificationLink(result.email, result.username, 'defaultEditVerificationMail');
+        return result;
     }
 
     @Get('get/lady/:id')

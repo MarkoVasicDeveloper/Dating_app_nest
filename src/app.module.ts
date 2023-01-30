@@ -67,6 +67,9 @@ import { SubscriptionController } from './controllers/subscription/subscription.
 import { SubscriptionService } from './services/subscription/subscription.service';
 import { EmailTemplateController } from './controllers/files/email.template.controller';
 import { EmailTemplateService } from './services/email_template/email.template.service';
+import { TrueInformation } from 'entities/TrueInformation';
+import { TrueInformationController } from './controllers/true_information/true.information.controller';
+import { TrueInformationService } from './services/true_information/true.information.service';
 
 @Module({
   imports: [
@@ -77,13 +80,13 @@ import { EmailTemplateService } from './services/email_template/email.template.s
       username: 'root',
       password: 'root',
       database: 'dating_app',
-      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog, Subscription]
+      entities: [Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog, Subscription, TrueInformation]
     }),
-    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog, Subscription]),
+    TypeOrmModule.forFeature([Gentleman, GentlemanAbout, Lady, LadyAbout, PhotosGentleman, PhotosLady, RefreshToken, Message, Administrator, GiftCategory, Partners, PartnersPhoto, Produces, Order, LadiesWishes, RequestToAdministrator, UserLog, Subscription, TrueInformation]),
     ScheduleModule.forRoot()
   ],
-  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController, PasswordResetController, GiftController, PartnersController, ProducePhotoController, ProducesController, OrderController, LadiesWishesController, RequestToAdministratorController, SubscriptionController, EmailTemplateController],
-  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService, PartnersService, ProducePhotoService, ProducesService, OrderService, LadiesWishesService, RequestToAdminService, UserLogService, CronJobsService, SubscriptionService, EmailTemplateService],
+  controllers: [GentlemanController, LadyContoller, AuthController, PhotoController, ConversationController, MessagesController, AdministratorController, GentlemanController, LadyAboutController, VerificationAndPrivilegesController, GentlemanAboutController, ReportController, PasswordResetController, GiftController, PartnersController, ProducePhotoController, ProducesController, OrderController, LadiesWishesController, RequestToAdministratorController, SubscriptionController, EmailTemplateController, TrueInformationController],
+  providers: [GentlemanService, LadyService, JwtService, PhotoService, MailerService, Gateway, SocketService, ConversationService, MessagesService, AdministratorService, GentlemanService, LadyAboutService, VerificationAndPrivileguesService, GentlemanAboutService, PasswordResetService, GiftService, PartnersService, ProducePhotoService, ProducesService, OrderService, LadiesWishesService, RequestToAdminService, UserLogService, CronJobsService, SubscriptionService, EmailTemplateService, TrueInformationService],
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer) {

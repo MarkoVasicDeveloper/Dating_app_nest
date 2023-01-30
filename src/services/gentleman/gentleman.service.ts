@@ -74,7 +74,7 @@ export class GentlemanService {
         gentlemanId: id,
         username
       },
-      relations: ['gentlemanAbout']
+      relations: ['gentlemanAbouts']
     })
     if(!gentleman) return new ApiResponse('error', 'User is not found', -1002);
     return gentleman;

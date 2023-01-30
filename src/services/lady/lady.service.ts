@@ -2,7 +2,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Lady } from "entities/Lady";
 import { AddLadyDto } from "src/dto/lady/add.lady.dto";
 import { ApiResponse } from "src/misc/api.response";
-import { Repository } from "typeorm";
+import { LessThan, Repository } from "typeorm";
 import * as fs from 'fs';
 import { EditLadyDto } from "src/dto/lady/edit.lady.dto";
 import { passwordHash } from "src/misc/password.hash";
@@ -188,4 +188,16 @@ export class LadyService {
 
         return await builder.getMany();
     }
+
+    async nonActive():Promise<Lady[]> {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        date.toISOString().replace('T', " ").slice(0, -5);
+        
+        return await this.ladyService.find({
+          where: {
+            lastLogIn: LessThan(date)
+          }
+        })
+      }
 }

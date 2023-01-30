@@ -59,6 +59,9 @@ export class Lady {
   @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
   created: Date;
 
+  @Column("timestamp", { name: "last_log_in", nullable: true })
+  lastLogIn: Date | null;
+
   @OneToMany(() => LadiesWishes, (ladiesWishes) => ladiesWishes.lady)
   ladiesWishes: LadiesWishes[];
 

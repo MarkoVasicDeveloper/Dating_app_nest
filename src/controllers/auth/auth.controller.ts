@@ -49,6 +49,9 @@ export class AuthController {
 
         if(user.password !== passwordHashString) return new ApiResponse('error', 'Wrong username or password', 3001);
 
+        user.lastLogIn = new Date().toISOString().replace('T', " ").slice(0,-5);
+        await service.savedUser(user);
+
         const ip = req.socket?.remoteAddress || null;
         const userAgent = req.headers['user-agent']
         

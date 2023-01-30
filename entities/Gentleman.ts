@@ -78,6 +78,9 @@ export class Gentleman {
   @Column("timestamp", { name: "created", default: () => "CURRENT_TIMESTAMP" })
   created: Date;
 
+  @Column("timestamp", { name: "last_log_in", nullable: true })
+  lastLogIn: Date | null;
+
   @OneToMany(() => GentlemanAbout, (gentlemanAbout) => gentlemanAbout.gentleman)
   gentlemanAbouts: GentlemanAbout[];
 

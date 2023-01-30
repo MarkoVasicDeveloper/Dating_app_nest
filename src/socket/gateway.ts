@@ -3,7 +3,6 @@ import { OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { SubscribeMessage, WebSocketServer } from "@nestjs/websockets/decorators";
 import { Gentleman } from "entities/Gentleman";
 import { Lady } from "entities/Lady";
-import { Message } from "entities/Message";
 import { Server, Socket } from 'socket.io';
 import { ApiResponse } from "src/misc/api.response";
 import { GentlemanService } from "src/services/gentleman/gentleman.service";
@@ -12,6 +11,8 @@ import { MessagesService } from "src/services/message/message.service";
 import { SocketService } from "src/services/socket/socket.service";
 
 export let activeUsers = 0;
+export let totalMessage = 0;
+export let useChart = 0;
 const online = [];
 
 @WebSocketGateway(3001,{
@@ -48,6 +49,7 @@ export class Gateway implements OnModuleInit, OnGatewayDisconnect{
                 }
                 online.push(user);
                 activeUsers += 1;
+                useChart += 1;
             }
         })
     }
@@ -129,6 +131,7 @@ export class Gateway implements OnModuleInit, OnGatewayDisconnect{
         const conversation = user.conversations as any;
 
         if(conversation !== null && conversation.some((userObject: {id: number, username: string}) => userObject.id === data.connectonId && userObject.username === data.connectionUsername)) {
+            totalMessage += 1;
             if(user instanceof Gentleman && user.privileges === 'gentleman'){
                 user.numberOfMessage = user.numberOfMessage ? user.numberOfMessage + 1 : user.numberOfMessage = 1;
             }

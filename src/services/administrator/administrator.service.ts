@@ -30,6 +30,12 @@ export class AdministratorService{
         }
     }
 
+    async savedUser(data: Administrator):Promise<Administrator | ApiResponse> {
+        const admin = await this.adminService.save(data);
+        if(!admin) return new ApiResponse('error', 'Admin is not saved!', -5001);
+        return admin;
+    }
+
     async getByUsername(username: string):Promise<Administrator | ApiResponse> {
         const admin = await this.adminService.findOne({
             where: {

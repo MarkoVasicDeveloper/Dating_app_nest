@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Gentleman } from 'entities/Gentleman';
 import { AddGentlemanDto } from 'src/dto/gentleman/add.gentleman.dto';
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, LessThan, Repository } from "typeorm";
 import * as crypto from 'crypto';
 import { ApiResponse } from 'src/misc/api.response';
 import * as fs from 'fs'; 
@@ -199,5 +199,17 @@ export class GentlemanService {
     builder.where('(gentleman.username LIKE :kw OR gentleman.city LIKE :kw OR gentleman.privileges LIKE :kw)', { kw: '%' + query + '%'});
 
     return await builder.getMany();
+  }
+
+  async nonActive():Promise<Gentleman[]> {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    date.toISOString().replace('T', " ").slice(0, -5);
+    
+    return await this.gentlemanService.find({
+      where: {
+        lastLogIn: LessThan(date)
+      }
+    })
   }
 }

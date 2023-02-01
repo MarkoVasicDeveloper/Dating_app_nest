@@ -13,11 +13,13 @@ import { JwtService } from '../jwt/jwt.service';
 import { BlockTheUserDto } from 'src/dto/gentleman/block.the.user.dto';
 import { fillObject } from 'src/misc/fill.object';
 import { ReportDto } from 'src/dto/report/report.dto';
+import { LadyService } from '../lady/lady.service';
 
 @Injectable()
 export class GentlemanService {
   constructor(@InjectRepository(Gentleman) private readonly gentlemanService:     Repository<Gentleman>,
-              private readonly jwtService: JwtService) {}
+              private readonly jwtService: JwtService,
+              private readonly ladyService: LadyService) {}
   
   async addGenleman(data: AddGentlemanDto): Promise <Gentleman | ApiResponse> {
 
@@ -146,11 +148,28 @@ export class GentlemanService {
     return new ApiResponse('ok', 'The user has been blocked!', 200);
   }
 
-  async getAll(page: number | null = 1):Promise<Gentleman[]> {
-    return await this.gentlemanService.find({
+  async getAll(page: number | null = 1, id: number):Promise<Gentleman[] | ApiResponse> {
+    let allGentleman = await this.gentlemanService.find({
       relations: ['gentlemanAbouts'],
       take: 50 * page
     });
+
+    const lady = await this.ladyService.getById(id);
+    if(lady instanceof ApiResponse) return lady;
+
+    if(lady.blocked) {
+      const blockedArray = lady.blocked as any;
+      const blockedBy = blockedArray.map((object: {id: number, username: string}) => object.id);
+      const filterGentleman = allGentleman.filter((gentleman: Gentleman) => !blockedBy.includes(gentleman.gentlemanId) )
+
+      allGentleman = filterGentleman;
+    }
+
+    return allGentleman;
+  }
+
+  async getAllByAdmin():Promise<Gentleman[]> {
+    return await this.gentlemanService.find();
   }
 
   async getAllForMail():Promise<Gentleman[]>{
@@ -194,11 +213,20 @@ export class GentlemanService {
     return report;
   }
 
-  async search(query: string):Promise<Gentleman[]> {
+  async search(query: string, id: number):Promise<Gentleman[] | ApiResponse> {
+    const lady = await this.ladyService.getById(id);
+    if(lady instanceof ApiResponse) return lady;
+    const blockedArray = lady.blocked as any;
+    const blockedBy = blockedArray ? blockedArray.map((object: {id: number, username: string}) => object.id): [0];
+    
     const builder = this.gentlemanService.createQueryBuilder('gentleman');
-    builder.where('(gentleman.username LIKE :kw OR gentleman.city LIKE :kw OR gentleman.privileges LIKE :kw)', { kw: '%' + query + '%'});
+    builder.where(`(gentleman.username LIKE :kw OR gentleman.city LIKE :kw OR gentleman.privileges LIKE :kw AND gentleman.gentlemanId NOT IN (:...blockedBy))`, { kw: '%' + query + '%', blockedBy});
 
-    return await builder.getMany();
+    const reduceGentleman = await builder.getMany();
+
+    const result = reduceGentleman.filter((gentleman: any) => gentleman.blocked === null || gentleman.blocked.every(el => el.id != id));
+
+    return result;
   }
 
   async nonActive():Promise<Gentleman[]> {

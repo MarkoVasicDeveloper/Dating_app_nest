@@ -67,11 +67,18 @@ export class GentlemanController {
     return await this.gentlemanService.blockTheGentleman(data);
   }
 
-  @Get('get/allGentleman/:page')
+  @Get('get/allGentleman/:page/:id')
   @UseGuards(RoleCheckerGard)
-  @AllowToRole('administrator', 'lady')
-  async getAll(@Param('page') page: number):Promise<Gentleman[]> {
-    return await this.gentlemanService.getAll(page);
+  @AllowToRole('lady')
+  async getAll(@Param('page') page: number, @Param('id') id: number):Promise<Gentleman[] | ApiResponse> {
+    return await this.gentlemanService.getAll(page, id);
+  }
+
+  @Get('get/allGentleman/administrator')
+  @UseGuards(RoleCheckerGard)
+  @AllowToRole('administrator')
+  async getAllByAdmin():Promise<Gentleman[]> {
+    return await this.gentlemanService.getAllByAdmin();
   }
 
   @Get('get/gentlemanByPrivileges/:privileges/:page')
@@ -81,10 +88,10 @@ export class GentlemanController {
     return await this.gentlemanService.getByPrivileges(privileges, page);
   }
 
-  @Get('search/gentleman/:query')
+  @Get('search/gentleman/:query/:id')
   @UseGuards(RoleCheckerGard)
   @AllowToRole('administrator','lady')
-  async searchGentleman(@Param('query') query: string):Promise<Gentleman[]>{
-    return await this.gentlemanService.search(query);
+  async searchGentleman(@Param('query') query: string, @Param('id') id: number):Promise<Gentleman[] | ApiResponse>{
+    return await this.gentlemanService.search(query, id);
   }
 }

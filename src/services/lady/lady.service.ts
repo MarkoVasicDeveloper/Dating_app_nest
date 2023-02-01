@@ -14,12 +14,13 @@ import { ReportDto } from "src/dto/report/report.dto";
 import { LadiesWishesService } from "../ladies_wishies/ladies.wishes.service";
 import { Gentleman } from "entities/Gentleman";
 import { GentlemanService } from "../gentleman/gentleman.service";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class LadyService {
     constructor(@InjectRepository(Lady) private readonly ladyService: Repository<Lady>,
                 private readonly jwtService: JwtService,
-                private readonly ladiesWishesService: LadiesWishesService,
-                private readonly gentlemanService: GentlemanService) {}
+                private readonly ladiesWishesService: LadiesWishesService) {}
 
     async addLady(data: AddLadyDto) : Promise <Lady | ApiResponse> {
         try {
@@ -149,17 +150,28 @@ export class LadyService {
         return new ApiResponse('ok', 'The user has been blocked!', 200);
     }
 
-    async getAll(page: number | null = 1, id: number):Promise<Lady[]> {
-        const gentleman = await this.gentlemanService.getById(id);
-        const allLady = await this.ladyService.find({
+    async getAll(page: number | null = 1, gentleman: Gentleman):Promise<Lady[]> {
+        let allLady = await this.ladyService.find({
             relations: ['ladyAbouts'],
             take: 50 * page
-        });
+        })
 
-        if(gentleman instanceof Gentleman && gentleman.privileges === 'gentleman') {
+        if(gentleman.blocked) {
+            const blockedArray = gentleman.blocked as any;
+            const blockedBy = blockedArray.map((object: {id: number, username: string}) => object.id);
+            const filterLady = allLady.filter((lady: Lady) => !blockedBy.includes(lady.ladyId) )
+            
+            allLady = filterLady;
+        }
+
+        if(gentleman.privileges === 'gentleman') {
             return allLady.slice(0,3);
         }
         return allLady;
+    }
+
+    async getAllByAdmin():Promise<Lady[]> {
+        return await this.ladyService.find();
     }
 
     async getAllForMail():Promise<Lady[]> {
@@ -182,11 +194,16 @@ export class LadyService {
         return report;
     }
 
-    async search(query: string):Promise<Lady[]> {
-        const builder = this.ladyService.createQueryBuilder('lady');
-        builder.where('(lady.username LIKE :kw OR lady.city LIKE :kw)', { kw: '%' + query + '%'});
+    async search(query: string, id: number, blockedBy: []):Promise<Lady[] | ApiResponse> {
 
-        return await builder.getMany();
+        const builder = this.ladyService.createQueryBuilder('lady');
+        builder.where('(lady.username LIKE :kw OR lady.city LIKE :kw AND lady.ladyId NOT IN (:...blockedBy))', { kw: '%' + query + '%', blockedBy});
+
+        const reduceLady = await builder.getMany();
+
+        const result = reduceLady.filter((lady: any) => lady.blocked === null || lady.blocked.every(el => el.id != id));
+
+        return result;
     }
 
     async nonActive():Promise<Lady[]> {
